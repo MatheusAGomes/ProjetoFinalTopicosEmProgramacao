@@ -30,7 +30,9 @@ router.get('/imgreading', (req, res, next) => {
   res.sendFile(__dirname+'/views/Reading....svg')
 });
 
-
+router.get('/CreateCountcss', (req, res, next) => {
+  res.sendFile(__dirname+'/views/CreateCount.css')
+});
 /*
 
 
