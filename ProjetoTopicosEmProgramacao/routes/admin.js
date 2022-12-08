@@ -3,7 +3,7 @@ const router = express();
 const Loaders = require('../startdb.js')
 const UserModel = require('../Models/userModel.js');
 
-const { default: axios } = require('axios');
+let axios = require('axios');
 router.set('view engine','ejs')
 
 //"https://www.googleapis.com/books/v1/volumes?q=HarryPotter&key=AIzaSyB0tE_alkPXEnuRdhd3PtaUwiFFEISIsSI";
@@ -45,7 +45,7 @@ router.post('/', (req, res, next) => {
       {
 
       
-        res.redirect(`/DashBord/${emails[index]._id.toString()}`)
+       return  res.redirect(`/DashBord/${emails[index]._id.toString()}`)
       }
   }
   }
@@ -67,7 +67,7 @@ NovoUsuario
 */
 
 router.get('/NovoUsuario',  (req, res, next) => {
-  res.sendFile(__dirname+'/views/CreateCount.html');
+  res.render(__dirname+'/views/CreateCount.ejs');
   
 });
 
@@ -113,8 +113,14 @@ DASHBORD
 
 router.get('/DashBord/:id', async(req, res, next) => {
   let valordoid = req.params.id
-  let teste;
-  objetodousuario =  await UserModel.find({_id:'639113566d8e6ef04676690c'})
+  let quanitidadeDePaginas = 0;
+  objetodousuario =  await UserModel.find({_id:valordoid})
+  //let arrayDeLivrosDoUsario = objeto_do_usuario[0].livros
+  for (let index = 0; index < arrayDeLivrosDoUsario.length; index++) {
+    arrayDeLivrosDoUsario[index].numeroDePaginasLivro
+    
+  }
+
   res.render(__dirname+'/views/DashBord.ejs',{NomeDoUsuario:objetodousuario[0].name})
 });
 
@@ -138,15 +144,15 @@ router.get('/MinhaPesquisa/:id', async(req, res, next) => {
 
   let valordoid = req.params.id
   let teste;
-  objetodousuario =  await UserModel.find({_id:'639113566d8e6ef04676690c'})
+  objetodousuario =  await UserModel.find({_id:valordoid})
   res.render(__dirname+'/views/MinhaPesquisa.ejs',{NomeDoUsuario:objetodousuario[0].name})
 });
 router.post('/MinhaPesquisa/:id', async(req, res, next) => {
   let valordoid = req.params.id
   let teste;
-  objetodousuario =  await UserModel.find({_id:'639113566d8e6ef04676690c'})
+  objetodousuario =  await UserModel.find({_id:valordoid})
 
-  let nomeDoLivro = req.body.NomeDoLivro
+  let nomeDoLivro = req.body.NomeDoLivro.trim()
   console.log(nomeDoLivro)
 
   let apigoogleBook = `https://www.googleapis.com/books/v1/volumes?q=${nomeDoLivro}&key=AIzaSyB0tE_alkPXEnuRdhd3PtaUwiFFEISIsSI`
@@ -154,7 +160,7 @@ router.post('/MinhaPesquisa/:id', async(req, res, next) => {
   //console.log(apigoogleBook)
 
   let arrayDeResposta = await axios.get(apigoogleBook);
-  //console.log(arrayDeResposta.data.items[0])
+  console.log(arrayDeResposta.data.items[0])
 
   let objetoLivro = {
     Nome:arrayDeResposta.data.items[0].volumeInfo.title,
@@ -163,17 +169,103 @@ router.post('/MinhaPesquisa/:id', async(req, res, next) => {
     quantidadedePaginas:arrayDeResposta.data.items[0].volumeInfo.pageCount,
   }
 
-  res.redirect(`/MinhaPesquisaComResposta/${valordoid}/${objetoLivro.Nome}/${objetoLivro.autor}/${objetoLivro.description}/${objetoLivro.quantidadedePaginas}/`);
+  res.redirect(`/MinhaPesquisaComResposta/${valordoid}/book/${arrayDeResposta.data.items[0].id}`);
 
   //res.render(__dirname+`/views/MinhaPesquisaComResultados.ejs`,{NomeDoLivro:objetoLivro.Nome,Autor:objetoLivro.autor,description:objetoLivro.description,quantidadedePaginas:objetoLivro.quantidadedePaginas})
 });
 
 
-router.post('/MinhaPesquisaComResposta/:id?/:nome?/:autor?/:description/:quantidadedePaginas?', async(req, res, next) => {
-console.log(objetoLivro)
+router.get('/MinhaPesquisaComResposta/:id/book/:idbook', async(req, res, next) => {
+console.log(req.params.id)
+console.log(req.params.idbook)
+
+let valordoid = req.params.id
+  let teste;
+  objetodousuario =  await UserModel.find({_id:req.params.id})
+
+let pegando_livro_pelo_id = `https://www.googleapis.com/books/v1/volumes/${req.params.idbook}?key=AIzaSyB0tE_alkPXEnuRdhd3PtaUwiFFEISIsSI`
+
+let arrayDeResposta = await axios.get(pegando_livro_pelo_id);
+console.log(arrayDeResposta.data.volumeInfo.title)
+  res.render(__dirname+"/views/MinhaPesquisaComResposta.ejs",{NomeDoUsuario:objetodousuario[0].name,NomeDoLivro:arrayDeResposta.data.volumeInfo.title,Autor:arrayDeResposta.data.volumeInfo.authors[0],description:arrayDeResposta.data.volumeInfo.description,quantidadedePaginas:arrayDeResposta.data.volumeInfo.pageCount})
 });
 
 
+
+
+router.post('/MinhaPesquisaComResposta/:id/book/:idbook', async(req, res, next) => {
+  let valordoid = req.params.id
+  let teste;
+  objetodousuario =  await UserModel.find({_id:valordoid})
+
+  let nomeDoLivro = req.body.NomeDoLivro.trim()
+  console.log(nomeDoLivro)
+
+  let apigoogleBook = `https://www.googleapis.com/books/v1/volumes?q=${nomeDoLivro}&key=AIzaSyB0tE_alkPXEnuRdhd3PtaUwiFFEISIsSI`
+  
+
+  let arrayDeResposta = await axios.get(apigoogleBook);
+  console.log(arrayDeResposta.data.items[0])
+
+  let objetoLivro = {
+    Nome:arrayDeResposta.data.items[0].volumeInfo.title,
+    autor:arrayDeResposta.data.items[0].volumeInfo.authors[0],
+    description:arrayDeResposta.data.items[0].volumeInfo.description,
+    quantidadedePaginas:arrayDeResposta.data.items[0].volumeInfo.pageCount,
+  }
+
+  res.redirect(`/MinhaPesquisaComResposta/${valordoid}/book/${arrayDeResposta.data.items[0].id}`);
+
+  //res.render(__dirname+`/views/MinhaPesquisaComResultados.ejs`,{NomeDoLivro:objetoLivro.Nome,Autor:objetoLivro.autor,description:objetoLivro.description,quantidadedePaginas:objetoLivro.quantidadedePaginas})
+});
+
+router.get('/DashBord/:id/CadastroDeLivro', async(req, res, next) => {
+  let valordoid = req.params.id
+  let teste;
+  objetodousuario =  await UserModel.find({_id:valordoid})
+  res.render(__dirname+"/views/CadastroDeLivro.ejs")
+});
+router.post('/DashBord/:id/CadastroDeLivro', async(req, res, next) => {
+  let valordoid = req.params.id
+  
+  let nomeDoLivro = req.body.userNomeDoLivro.trim()
+  console.log(nomeDoLivro)
+
+  let apigoogleBook = `https://www.googleapis.com/books/v1/volumes?q=${nomeDoLivro}&key=AIzaSyB0tE_alkPXEnuRdhd3PtaUwiFFEISIsSI`
+  
+
+  let arrayDeResposta = await axios.get(apigoogleBook);
+  // peguei o id
+  let iddoLivro = arrayDeResposta.data.items[0].id
+  console.log(iddoLivro)
+  //situacao
+  let situacaoDoLivro;
+   situacaoDoLivro = req.body.select
+  let numeroDePaginasLivro;
+  numeroDePaginasLivro = req.body.NumeroDePaginas
+
+   let objetoNovoLivro = {idLivro:iddoLivro,situacaoDoLivro:situacaoDoLivro,numeroDePaginasLivro:numeroDePaginasLivro}
+
+   //pegando o array do usuario
+  objetodousuario =  await UserModel.find({_id:valordoid})
+  let arrayDeLivrosDoUsario = objetodousuario[0].livros;
+  console.log(arrayDeLivrosDoUsario)
+  //colocando os novosLivros
+  arrayDeLivrosDoUsario.push(objetoNovoLivro)
+  console.log(arrayDeLivrosDoUsario)
+
+  await UserModel.findOneAndUpdate({
+    _id: valordoid
+}, {
+    $set: {
+        livros: arrayDeLivrosDoUsario
+    }
+}, {
+    new: true // retorna o novo objeto
+})
+
+return  res.redirect(`/DashBord/${valordoid}`)
+});
 
 
 
