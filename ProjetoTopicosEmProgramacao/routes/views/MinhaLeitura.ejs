@@ -7,7 +7,7 @@
     <script type="module" charset="utf-8"  defer>
     </script>
 
-    <title>MinhaPesquisa</title>
+    <title>Minhas Leituras</title>
 </head>
 <body>
     <div id="Menu">
@@ -23,14 +23,17 @@
                 <form method="POST">
 
                     <!-- aqui tenta fazer uma div com estilização-->
+                    <% if(infolivro != []) { %>
                     <% for(let i=0;i < (infolivro.length);i++ ) { %>
                         <h1><%= infolivro[i].nome %></h1>
                         <h1><%= infolivro[i].porcentagem %> %</h1>
                         <h1><%= infolivro[i].situacao %></h1>
                         <h1><%= infolivro[i].nome %></h1>
                       <% } %>
-
-                    
+                      <% }else{ %>
+                        <!--Isso nao funciona-->
+                        <h1>Nenhum Livro Cadastrado</h1>
+                     <% } %>
                         
                     
                     
