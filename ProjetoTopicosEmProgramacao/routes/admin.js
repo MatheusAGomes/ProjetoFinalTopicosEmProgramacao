@@ -338,12 +338,59 @@ return  res.redirect(`/DashBord/${valordoid}`)
 
 
 router.get('/DashBord/:id/AlterarLivro/:posicaodolivro', async(req, res, next) => {
+  //alteracao a partir da posicao do array
+  //0
   let valordoid = req.params.id
-  let teste;
+  let valorDaPosicao = req.params.posicaodolivro;
   objetodousuario =  await UserModel.find({_id:valordoid})
-  res.render(__dirname+"/views/CadastroDeLivro.ejs")
+  let livro = objetodousuario[0].livros[valorDaPosicao]
+
+  let pegando_livro_pelo_id = `https://www.googleapis.com/books/v1/volumes/${livro.idLivro}?key=AIzaSyB0tE_alkPXEnuRdhd3PtaUwiFFEISIsSI`
+  let arrayDeResposta = await axios.get(pegando_livro_pelo_id);
+
+  let nomeDoLivro = arrayDeResposta.data.volumeInfo.title
+
+  
+  
+  res.render(__dirname+"/views/AlterarLivro.ejs",{NomeDoLivro:nomeDoLivro,NumeroDePaginas:objetodousuario[0].livros[valorDaPosicao].numeroDePaginasLivro})
 });
 
+
+router.post('/DashBord/:id/AlterarLivro/:posicaodolivro', async(req, res, next) => {
+  //alteracao a partir da posicao do array
+  //0
+  let valordoid = req.params.id
+  let valorDaPosicao = req.params.posicaodolivro;
+
+  //pegando os valores att do livro
+  //id: eu tenho o nome do livro colocado 
+  let nomedoLivro = req.body.userNomeDoLivro;
+  let apigoogleBook = `https://www.googleapis.com/books/v1/volumes?q=${nomedoLivro}&key=AIzaSyB0tE_alkPXEnuRdhd3PtaUwiFFEISIsSI`
+  let arrayDeResposta = await axios.get(apigoogleBook);
+  let iddoLivro = arrayDeResposta.data.items[0].id
+
+  let livroatt = {idLivro:iddoLivro,situacaoDoLivro:req.body.select,numeroDePaginasLivro:req.body.NumeroDePaginas}
+
+  let objetodousuario =  await UserModel.find({_id:valordoid})
+  let arrayDeLivrosDoUsario = objetodousuario[0].livros;
+  arrayDeLivrosDoUsario[valorDaPosicao] = livroatt
+  console.log(arrayDeLivrosDoUsario)
+
+  await UserModel.findOneAndUpdate({
+    _id: valordoid
+}, {
+    $set: {
+        livros: arrayDeLivrosDoUsario
+    }
+}, {
+    new: true // retorna o novo objeto
+})
+  
+
+  
+  res.redirect(`/DashBord/${valordoid}/MinhaLeitura/`)
+  
+});
 
 
 

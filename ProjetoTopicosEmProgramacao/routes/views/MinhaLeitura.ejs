@@ -25,10 +25,12 @@
                     <!-- aqui tenta fazer uma div com estilização-->
                     <% if(infolivro != []) { %>
                     <% for(let i=0;i < (infolivro.length);i++ ) { %>
+                        <div>
                         <h1><%= infolivro[i].nome %></h1>
                         <h1><%= infolivro[i].porcentagem %> %</h1>
                         <h1><%= infolivro[i].situacao %></h1>
                         <h1><%= infolivro[i].nome %></h1>
+                        </div>
                       <% } %>
                       <% }else{ %>
                         <!--Isso nao funciona-->
