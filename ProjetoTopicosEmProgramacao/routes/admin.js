@@ -343,6 +343,53 @@ router.get('/DashBord/:id/AlterarLivro/:posicaodolivro', async(req, res, next) =
 });
 
 
+
+
+router.get('/DashBord/:id/MinhaLeitura/', async(req, res, next) => {
+  let valordoid = req.params.id
+  objetodousuario =  await UserModel.find({_id:valordoid})
+  let arryLivros = objetodousuario[0].livros
+  console.log(arryLivros)
+  let arrayParaSerLido = [];
+
+  //pegando o nome do livro com base no id
+
+  for (let index = 0; index < arryLivros.length; index++) {
+    let pegando_livro_pelo_id = `https://www.googleapis.com/books/v1/volumes/${arryLivros[index].idLivro}?key=AIzaSyB0tE_alkPXEnuRdhd3PtaUwiFFEISIsSI`
+    let arrayDeResposta = await axios.get(pegando_livro_pelo_id);
+   // console.log(arrayDeResposta)
+   let numeropaginas = arrayDeResposta.data.volumeInfo.pageCount
+   let numerolido = parseInt(arryLivros[index].numeroDePaginasLivro,10)
+   let porcentagem =  ((numerolido * 100)/numeropaginas).toFixed(1)
+   let situacaoDoLivro = arryLivros[index].situacaoDoLivro
+   let situacaoModificada;
+   switch (situacaoDoLivro) {
+    case 'valor1':
+      situacaoModificada = 'Lendo'
+      break;
+    case 'valor2':
+        situacaoModificada = 'Lido'
+        break;
+    case 'valor3':
+          situacaoModificada = 'Quero Ler'
+          break;
+    default:
+          situacaoModificada = 'Erro'
+      break;
+   }
+
+   // porcentagem
+    arrayParaSerLido[index] = {nome:arrayDeResposta.data.volumeInfo.title,porcentagem:porcentagem,situacao:situacaoModificada,numeroLido:arryLivros[index].numeroDePaginasLivro};
+    
+  }
+  console.log(arrayParaSerLido)
+  //console.log(arrayDeResposta.data)
+
+
+  res.render(__dirname+"/views/MinhaLeitura.ejs",{NomeDoUsuario:objetodousuario[0].name,infolivro:arrayParaSerLido})
+});
+
+
 module.exports = router;
 
 

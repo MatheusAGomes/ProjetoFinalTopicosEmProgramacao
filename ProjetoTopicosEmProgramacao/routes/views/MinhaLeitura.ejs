@@ -20,10 +20,20 @@
         <h1>MinhaPesquisa</h1>
         <div>
             <table>
-                <form  method="POST">
-                    <label>NomeDoLivro</label>
-                    <input type="text" name="NomeDoLivro">
-                    <input type="submit" value="Procurar">  
+                <form method="POST">
+
+                    <!-- aqui tenta fazer uma div com estilização-->
+                    <% for(let i=0;i < (infolivro.length);i++ ) { %>
+                        <h1><%= infolivro[i].nome %></h1>
+                        <h1><%= infolivro[i].porcentagem %> %</h1>
+                        <h1><%= infolivro[i].situacao %></h1>
+                        <h1><%= infolivro[i].nome %></h1>
+                      <% } %>
+
+                    
+                        
+                    
+                    
             </form>
             </table>
         </div>
