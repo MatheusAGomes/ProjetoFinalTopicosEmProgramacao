@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="module" charset="utf-8"  defer>
+        
+        //Botoes do menu
+        const btnAcionarResumo = document.getElementById('btnAcionarResumo')
+        const btnAcionarMinhasLeituras = document.getElementById('btnAcionarMinhasLeituras')
+        const btnAcionarPesquisaDeLivros = document.getElementById('btnAcionarPesquisaDeLivros')
+
+        btnAcionarResumo.addEventListener('click',() => AcionarResumo())
+        btnAcionarMinhasLeituras.addEventListener('click',() => AcionarMinhasLeituras())
+        btnAcionarPesquisaDeLivros.addEventListener('click',() => AcionarPesquisaDeLivros())
+
+
+        // divs
+        const divDashBordResumo = document.getElementById('DashBordResumo')
+        const divDashBordMinhaLeitura = document.getElementById('DashBordMinhaLeitura')
+        const divDashBordPesquisarLivro = document.getElementById('DashBordPesquisarLivro')
+        divDashBordResumo.style.display = "flex"
+            divDashBordMinhaLeitura.style.display = "none"
+            divDashBordPesquisarLivro.style.display = "none"
+
+        function AcionarResumo() {
+            divDashBordResumo.style.display = "flex"
+            divDashBordMinhaLeitura.style.display = "none"
+            divDashBordPesquisarLivro.style.display = "none"
+        }
+        function AcionarMinhasLeituras() {
+            divDashBordResumo.style.display = "none"
+            divDashBordMinhaLeitura.style.display = "flex"
+            divDashBordPesquisarLivro.style.display = "none"
+        }
+        function AcionarPesquisaDeLivros() {
+            divDashBordResumo.style.display = "none"
+            divDashBordMinhaLeitura.style.display = "none"
+            divDashBordPesquisarLivro.style.display = "flex"
+        }
+
+
+
+    </script>
+
+    <title>Resumo</title>
+</head>
+<body>
+    <div id="Menu">
+        <h1><%= NomeDoUsuario%></h1>
+        <input type="button" value="Resumo" id="btnAcionarResumo">
+        <input type="button" value="Minhas Leituras" id="btnAcionarMinhasLeituras">
+        <input type="button" value="Pesquisar Livros" id="btnAcionarPesquisaDeLivros">
+    </div>
+    <div id="DashBordResumo">  
+        <h1>Resumo</h1>
+        <div>
+            
+            <p>Livros lidos</p>
+        </div>
+        <div>
+            
+            <p>Paginas lidas</p>
+        </div>
+        <div>
+            <img>
+            
+            <p>Ultimo Livro</p>
+        </div>
+        <div id="idDivResumoDeAtividade">
+            <h1>Resumo de Atividade</h1>
+        </div>
+    </div>
+
+    <div id="DashBordMinhaLeitura">
+        <h1> Minha Leitura</h1>
+    </div>
+    <div id="DashBordPesquisarLivro">
+        <h1> Minha Pesquis</h1>
+           
+
+    </div>
+    
+</body>
+</html>
