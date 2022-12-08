@@ -2,6 +2,7 @@ const express = require('express');
 const router = express();
 const Loaders = require('../startdb.js')
 const UserModel = require('../Models/userModel.js');
+const path = require('path');
 
 let axios = require('axios');
 router.set('view engine','ejs')
@@ -12,6 +13,8 @@ let tamanho_do_array;
 let objeto_do_usuario;
 
 Loaders.start();
+
+router.use('/public', express.static(path.resolve(__dirname, 'public')));
 
 router.get('/', async(req, res, next) => {
   res.render(__dirname+'/views/index.ejs')
@@ -93,8 +96,14 @@ router.post('/NovoUsuario', async (req, res, next) => {
             }
         }
         }
-        const createCount =  await UserModel.create(objeto)
-        res.redirect('/');
+
+        let senhaConf = req.body.userConfirmeSenha
+
+        if( senhaConf !== "" &&  objeto.senha === senhaConf){
+          const createCount =  await UserModel.create(objeto)
+          res.redirect('/');
+        }else
+        res.redirect('/NovoUsuario');
 });
 
 
