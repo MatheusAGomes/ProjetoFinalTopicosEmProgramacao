@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AlterarLivro</title>
+</head>
+<body>
+    <form method="POST">
+        <h1>READING...</h1>
+        <label>NomeDoLivro</label>
+        <input type="text" name="userNomeDoLivro" value=<%= NomeDoLivro%>>
+        <label>Situacação</label>
+        <select name="select">
+            <option value="valor1"selected>Lendo</option>
+            <option value="valor2">Lido</option>
+            <option value="valor3">Quero Ler</option>
+        </select>
+        <label>Paginas</label>
+        <input type="text" name="NumeroDePaginas">
+        <input type="submit" value="Cadastrar">
+</form>
+</body>
+</html>

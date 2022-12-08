@@ -12,18 +12,27 @@
 <body>
     <div id="Menu">
         <h1><%= NomeDoUsuario%></h1>
-        <input type="button" value="Resumo" id="btnAcionarResumo">
-        <input type="button" value="Minhas Leituras" id="btnAcionarMinhasLeituras">
-        <input type="button" value="Pesquisar Livros" id="btnAcionarPesquisaDeLivros">
+        <form action="" action="/DashBord/:id" >
+        <input type="submit" value="Resumo" id="btnAcionarResumo">
+        </form>
+        <form action="MinhaLeitura" action="/MinhasLeituras/:id" >
+        <input type="submit" value="Minhas Leituras" id="btnAcionarMinhasLeituras">
+        </form>
+        <form action="MinhaPesquisa" action="/MinhaPesquisa/:id">
+        <input type="submit" value="Pesquisar Livros" id="btnAcionarPesquisaDeLivros">
+        </form>
+
     </div>
     <div id="DashBordResumo">  
         <h1>Resumo</h1>
         <div>
-            
+            <h1><%= quantidadedelivros %></h1>
+
             <p>Livros lidos</p>
         </div>
         <div>
-            
+            <h1><%= quantidadedepaginas %></h1>
+
             <p>Paginas lidas</p>
         </div>
         <div>

@@ -1,24 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="stylesheet" href="resetcss">
+    <link rel="stylesheet" href="indexcss">
     <title>Login</title>
 </head>
+
 <body>
-    <form action="/" method="POST">
-    <h1>READING...</h1>
-    <label>Usuario</label>
-    <input type="text" name="userText">
-    <label>Senha</label>
-    <input type="text" name="senhaText">
-    <input type="submit" id="btnLogar" value="Logar" />
-    </form>
-    <form action="/NovoUsuario" method="get">
-    <input type="submit" value="Criar Conta"/>
-    </form>
-   
-    
+    <section class="area-login">
+        <div class="login">
+            <div class="imagem">
+                <img src="imgreading">
+            </div>
+
+            <form action="/" method="POST">
+                <label>Usuário:</label>
+                <input type="text" name="userText">
+                <label>Senha:</label>
+                <input type="text" name="senhaText">
+                <div class="botoes">
+                    <input type="button" value="Criar Conta" />
+                    <input type="submit" id="btnLogar" value="Logar" />
+            </form>
+            <p>Esqueceu a senha? <a href="">Recuperar</a></p>
+        </div>
+    </section>
+    </main>
 </body>
+
 </html>

@@ -18,13 +18,17 @@ router.get('/', async(req, res, next) => {
   emails = await UserModel.find();
   tamanho_do_array = emails.length;
 });
-/*
-router.get('/css', (req, res, next) => {
-  res.sendFile()
+
+router.get('/indexcss', (req, res, next) => {
+  res.sendFile(__dirname+'/views/index.css')
 });
-*/
 
-
+router.get('/resetcss', (req, res, next) => {
+  res.sendFile(__dirname+'/views/reset.css')
+});
+router.get('/imgreading', (req, res, next) => {
+  res.sendFile(__dirname+'/views/Reading....svg')
+});
 
 
 /*
@@ -113,20 +117,54 @@ DASHBORD
 
 router.get('/DashBord/:id', async(req, res, next) => {
   let valordoid = req.params.id
-  let quanitidadeDePaginas = 0;
+  let quantidadedepaginas = 0;
+  let quantidadedeLivros = 0;
   objetodousuario =  await UserModel.find({_id:valordoid})
-  //let arrayDeLivrosDoUsario = objeto_do_usuario[0].livros
-  for (let index = 0; index < arrayDeLivrosDoUsario.length; index++) {
-    arrayDeLivrosDoUsario[index].numeroDePaginasLivro
+ 
+  //pegando o numero de paginas lidas
+ 
+  
+  try {
+    let arrayDeLivrosDoUsario = objetodousuario[0].livros
+
+    for (let index = 0; index < arrayDeLivrosDoUsario.length; index++) {
+      quantidadedepaginas +=  parseInt(arrayDeLivrosDoUsario[index].numeroDePaginasLivro, 10);
+  }
+
+  } catch (error) {
     
   }
 
-  res.render(__dirname+'/views/DashBord.ejs',{NomeDoUsuario:objetodousuario[0].name})
+  // numero de livros setados como lido
+  try {
+    for (let index = 0; index < arrayDeLivrosDoUsario.length; index++) {
+      let arrayDeLivrosDoUsario = objetodousuario[0].livros
+  
+      if(arrayDeLivrosDoUsario[index].situacaoDoLivro == 'valor2')
+      {
+        quantidadedeLivros += 1;
+      }
+    }
+    
+  } catch (error) {
+    
+  }
+  
+ 
+
+  
+
+  res.render(__dirname+'/views/DashBord.ejs',{NomeDoUsuario:objetodousuario[0].name,quantidadedepaginas:quantidadedepaginas,quantidadedelivros:quantidadedeLivros})
 });
 
 
 
+router.post('/DashBord/:id', async(req, res, next) => {
 
+  let valordoid = req.params.id
+  let teste;
+  console.log(req.body)
+});
 
 
 /*
@@ -268,6 +306,14 @@ return  res.redirect(`/DashBord/${valordoid}`)
 });
 
 
+
+
+router.get('/DashBord/:id/AlterarLivro/:posicaodolivro', async(req, res, next) => {
+  let valordoid = req.params.id
+  let teste;
+  objetodousuario =  await UserModel.find({_id:valordoid})
+  res.render(__dirname+"/views/CadastroDeLivro.ejs")
+});
 
 
 module.exports = router;
