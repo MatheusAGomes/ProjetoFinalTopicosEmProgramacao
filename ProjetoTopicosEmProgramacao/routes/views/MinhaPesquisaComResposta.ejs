@@ -7,7 +7,7 @@
     <script type="module" charset="utf-8"  defer>
     </script>
 
-    <title>Resumo</title>
+    <title>MinhaPesquisa</title>
 </head>
 <body>
     <div id="Menu">
@@ -16,23 +16,22 @@
         <input type="button" value="Minhas Leituras" id="btnAcionarMinhasLeituras">
         <input type="button" value="Pesquisar Livros" id="btnAcionarPesquisaDeLivros">
     </div>
-    <div id="DashBordResumo">  
-        <h1>Resumo</h1>
+    <div id="DashBordMinhaPesquisa">  
+        <h1>MinhaPesquisa</h1>
         <div>
-            
-            <p>Livros lidos</p>
-        </div>
-        <div>
-            
-            <p>Paginas lidas</p>
-        </div>
-        <div>
-            <img>
-            
-            <p>Ultimo Livro</p>
-        </div>
-        <div id="idDivResumoDeAtividade">
-            <h1>Resumo de Atividade</h1>
+            <table>
+                <form  method="POST">
+                    <label>NomeDoLivro</label>
+                    <input type="text" name="NomeDoLivro">
+                    <input type="submit" value="Procurar"> 
+                    <h1><%= NomeDoLivro%></h1>
+                    <h1><%= Autor%></h1>
+                    <h1><%= description%></h1>
+                    <h1><%= quantidadedePaginas%></h1>
+
+                    <h1></h1>
+            </form>
+            </table>
         </div>
     </div>
 </body>
