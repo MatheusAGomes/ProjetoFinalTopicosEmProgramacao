@@ -178,60 +178,87 @@ MINHA PESQUISA
 
 */
 
-router.get('/MinhaPesquisa/:id', async(req, res, next) => {
+// router.get('/MinhaPesquisa/:id', async(req, res, next) => {
 
-  let valordoid = req.params.id
-  let teste;
-  objetodousuario =  await UserModel.find({_id:valordoid})
-  res.render(__dirname+'/views/MinhaPesquisa.ejs',{NomeDoUsuario:objetodousuario[0].name})
-});
-router.post('/MinhaPesquisa/:id', async(req, res, next) => {
-  let valordoid = req.params.id
-  let teste;
-  objetodousuario =  await UserModel.find({_id:valordoid})
+//   let valordoid = req.params.id
+//   let teste;
+//   objetodousuario =  await UserModel.find({_id:valordoid})
+//   res.render(__dirname+'/views/MinhaPesquisaComResposta.ejs',{NomeDoUsuario:objetodousuario[0].name,})
+// });
+// router.post('/MinhaPesquisa/:id', async(req, res, next) => {
+//   let valordoid = req.params.id
+//   let teste;
+//   objetodousuario =  await UserModel.find({_id:valordoid})
 
-  let nomeDoLivro = req.body.NomeDoLivro.trim()
-  console.log(nomeDoLivro)
+//   let nomeDoLivro = req.body.NomeDoLivro.trim()
+//   console.log(nomeDoLivro)
 
-  let apigoogleBook = `https://www.googleapis.com/books/v1/volumes?q=${nomeDoLivro}&key=AIzaSyB0tE_alkPXEnuRdhd3PtaUwiFFEISIsSI`
+//   let apigoogleBook = `https://www.googleapis.com/books/v1/volumes?q=${nomeDoLivro}&key=AIzaSyB0tE_alkPXEnuRdhd3PtaUwiFFEISIsSI`
   
-  //console.log(apigoogleBook)
+//   //console.log(apigoogleBook)
 
-  let arrayDeResposta = await axios.get(apigoogleBook);
-  console.log(arrayDeResposta.data.items[0])
+//   let arrayDeResposta = await axios.get(apigoogleBook);
+//   console.log(arrayDeResposta.data.items[0])
 
-  let objetoLivro = {
-    Nome:arrayDeResposta.data.items[0].volumeInfo.title,
-    autor:arrayDeResposta.data.items[0].volumeInfo.authors[0],
-    description:arrayDeResposta.data.items[0].volumeInfo.description,
-    quantidadedePaginas:arrayDeResposta.data.items[0].volumeInfo.pageCount,
-  }
+//   let objetoLivro = {
+//     Nome:arrayDeResposta.data.items[0].volumeInfo.title,
+//     autor:arrayDeResposta.data.items[0].volumeInfo.authors[0],
+//     description:arrayDeResposta.data.items[0].volumeInfo.description,
+//     quantidadedePaginas:arrayDeResposta.data.items[0].volumeInfo.pageCount,
+//   }
 
-  res.redirect(`/MinhaPesquisaComResposta/${valordoid}/book/${arrayDeResposta.data.items[0].id}`);
+//   res.redirect(`/MinhaPesquisaComResposta/${valordoid}/book/${arrayDeResposta.data.items[0].id}`);
 
-  //res.render(__dirname+`/views/MinhaPesquisaComResultados.ejs`,{NomeDoLivro:objetoLivro.Nome,Autor:objetoLivro.autor,description:objetoLivro.description,quantidadedePaginas:objetoLivro.quantidadedePaginas})
+//   //res.render(__dirname+`/views/MinhaPesquisaComResultados.ejs`,{NomeDoLivro:objetoLivro.Nome,Autor:objetoLivro.autor,description:objetoLivro.description,quantidadedePaginas:objetoLivro.quantidadedePaginas})
+// });
+
+
+router.get(['/MinhaPesquisaComResposta/:id/book/','/MinhaPesquisaComResposta/:id/book/:idbook'], async(req, res, next) => {
+
+
+  let nomedoUsuario = ""
+  let titulo =""
+  let autor = ""
+  let description = ""
+  let numeroDePaginasLivro = ""
+  try {
+  console.log(req.params.id)
+  console.log(req.params.idbook)
+  
+  let valordoid = req.params.id
+    let teste;
+    objetodousuario =  await UserModel.find({_id:req.params.id})
+  
+  let pegando_livro_pelo_id = `https://www.googleapis.com/books/v1/volumes/${req.params.idbook}?key=AIzaSyB0tE_alkPXEnuRdhd3PtaUwiFFEISIsSI`
+  
+  let arrayDeResposta = await axios.get(pegando_livro_pelo_id);
+  //console.log(arrayDeResposta.data.volumeInfo.title)
+
+
+
+  nomedoUsuario = objetodousuario[0].name
+  titulo= arrayDeResposta.data.volumeInfo.title
+  console.log(titulo)
+  autor = arrayDeResposta.data.volumeInfo.authors[0]
+  description = arrayDeResposta.data.volumeInfo.description
+  numeroDePaginasLivro = arrayDeResposta.data.volumeInfo.pageCount;
+  return res.render(__dirname+"/views/MinhaPesquisaComResposta.ejs",{NomeDoUsuario:nomedoUsuario,NomeDoLivro:titulo,Autor:autor,description:description,quantidadedePaginas:numeroDePaginasLivro})
+  
+} catch (error) {
+  
+}
+ 
+
+
+
+res.render(__dirname+"/views/MinhaPesquisaComResposta.ejs",{NomeDoUsuario:nomedoUsuario,NomeDoLivro:titulo,Autor:autor,description:description,quantidadedePaginas:numeroDePaginasLivro})
+
 });
 
 
-router.get('/MinhaPesquisaComResposta/:id/book/:idbook', async(req, res, next) => {
-console.log(req.params.id)
-console.log(req.params.idbook)
-
-let valordoid = req.params.id
-  let teste;
-  objetodousuario =  await UserModel.find({_id:req.params.id})
-
-let pegando_livro_pelo_id = `https://www.googleapis.com/books/v1/volumes/${req.params.idbook}?key=AIzaSyB0tE_alkPXEnuRdhd3PtaUwiFFEISIsSI`
-
-let arrayDeResposta = await axios.get(pegando_livro_pelo_id);
-console.log(arrayDeResposta.data.volumeInfo.title)
-  res.render(__dirname+"/views/MinhaPesquisaComResposta.ejs",{NomeDoUsuario:objetodousuario[0].name,NomeDoLivro:arrayDeResposta.data.volumeInfo.title,Autor:arrayDeResposta.data.volumeInfo.authors[0],description:arrayDeResposta.data.volumeInfo.description,quantidadedePaginas:arrayDeResposta.data.volumeInfo.pageCount})
-});
 
 
-
-
-router.post('/MinhaPesquisaComResposta/:id/book/:idbook', async(req, res, next) => {
+router.post(['/MinhaPesquisaComResposta/:id/book/','/MinhaPesquisaComResposta/:id/book/:idbook'], async(req, res, next) => {
   let valordoid = req.params.id
   let teste;
   objetodousuario =  await UserModel.find({_id:valordoid})
