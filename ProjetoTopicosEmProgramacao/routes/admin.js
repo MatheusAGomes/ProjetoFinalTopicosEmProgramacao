@@ -46,13 +46,12 @@ LOGIN
 
 */
 router.post('/', (req, res, next) => {
-
+  console.log('aqui')
   for (let index = 0; index < tamanho_do_array; index++) {
     if (req.body.userText == emails[index].email) {
       if(req.body.senhaText == emails[index].senha)
       {
-
-      
+        console.log('aqui')
        return  res.redirect(`/DashBord/${emails[index]._id.toString()}`)
       }
   }
@@ -444,6 +443,34 @@ router.get('/DashBord/:id/MinhaLeitura/', async(req, res, next) => {
 
 
   res.render(__dirname+"/views/MinhaLeitura.ejs",{NomeDoUsuario:objetodousuario[0].name,infolivro:arrayParaSerLido})
+});
+
+
+
+router.get('/DashBord/:id/AlterarUsuario', async(req, res, next) => {
+  let valordoid = req.params.id
+  objetodousuario =  await UserModel.find({_id:valordoid})
+  console.log(objetodousuario)
+ let email = objetodousuario[0].email
+ let nome = objetodousuario[0].name
+  res.render(__dirname+'/views/AlterarUsuario.ejs',{Nome:nome,Email:email})
+});
+
+
+router.post('/DashBord/:id/AlterarUsuario', async(req, res, next) => {
+  let valordoid = req.params.id
+  objetodousuario =  await UserModel.find({_id:valordoid})
+  console.log(objetodousuario)
+
+ let email = objetodousuario[0].email
+ let nome = objetodousuario[0].name
+ let livros = objetodousuario[0].livros
+ let objetoAlterado ={_id:objetodousuario[0]._id,email:email,senha:req.body.userSenha,name:nome,livros:livros}
+console.log(objetoAlterado)
+ await UserModel.findOneAndUpdate({_id: valordoid },objetoAlterado, {
+  new: true // retorna o novo objeto
+})
+      res.redirect(`/DashBord/${valordoid}`)
 });
 
 

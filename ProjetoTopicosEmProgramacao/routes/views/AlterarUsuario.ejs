@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="stylesheet" href="resetcss">
     <link rel="stylesheet" href="CreateCountcss">
-    <title>Criando Conta</title>
+    <title>Alterando Conta</title>
 </head>
 
 <body>
@@ -17,16 +17,16 @@
                 <img src="imgreading">
             </div>
 
-            <form action="/NovoUsuario" method="Post">
+            <form method="Post">
                 <label>Nome:</label>
-                <input type="text" name="userNome">
+                <input type="text" name="userNome" value=<%= Nome%>>
                 <label>Email:</label>
-                <input type="text" name="userEmail">
+                <input type="text" name="userEmail"value=<%= Email%>>
                 <label>Senha:</label>
                 <input type="text" name="userSenha">
                 <label>Confirme a senha:</label>
                 <input type="text" name="userConfirmeSenha">
-                <input type="submit" value="Criar Conta" />
+                <input type="submit" value="Alterar Conta" />
                 <input type="button" id="btnCancelar" value="Cancelar" />
             </form>
 
