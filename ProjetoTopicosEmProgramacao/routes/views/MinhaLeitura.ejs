@@ -17,15 +17,15 @@
         <input type="button" value="Pesquisar Livros" id="btnAcionarPesquisaDeLivros">
     </div>
     <div id="DashBordMinhaPesquisa">  
-        <h1>MinhaPesquisa</h1>
+        <h1>Minhas Leitura</h1>
         <div>
             <table>
                 <form method="POST">
 
                     <!-- aqui tenta fazer uma div com estilização-->
                     <% if(infolivro != []) { %>
-                    <% for(let i=0;i < (infolivro.length);i++ ) { %>
-                        <div>
+                    <% for(;i < (infolivro.length);i++ ) { %>
+                        <div name=<%= i%>>
                         <img src=<%= infolivro[i].img %>/>
                         <h1><%= infolivro[i].nome %></h1>
                         <h1><%= infolivro[i].porcentagem %> %</h1>

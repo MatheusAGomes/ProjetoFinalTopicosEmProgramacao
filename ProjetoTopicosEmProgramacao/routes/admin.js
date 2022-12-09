@@ -478,9 +478,9 @@ router.get('/DashBord/:id/MinhaLeitura/', async(req, res, next) => {
   }
   console.log(arrayParaSerLido)
   //console.log(arrayDeResposta.data)
+  let numerodoarray=0;
 
-
-  res.render(__dirname+"/views/MinhaLeitura.ejs",{NomeDoUsuario:objetodousuario[0].name,infolivro:arrayParaSerLido})
+  res.render(__dirname+"/views/MinhaLeitura.ejs",{NomeDoUsuario:objetodousuario[0].name,infolivro:arrayParaSerLido,i:numerodoarray})
 });
 
 
@@ -557,6 +557,59 @@ router.post('/DashBord/:id/AdicionarRotina', async(req, res, next) => {
   });
 
 
+  router.get('/DashBord/:id/MeuLivro/:posicaodolivro', async(req, res, next) => {
+    //alteracao a partir da posicao do array
+    //0
+    let valordoid = req.params.id
+    let valorDaPosicao = req.params.posicaodolivro;
+    objetodousuario =  await UserModel.find({_id:valordoid})
+    let livro = objetodousuario[0].livros[valorDaPosicao]
+    let situacao = objetodousuario[0].livros[valorDaPosicao].situacaoDoLivro;
+    console.log(situacao)
+    let situacaoModificada;
+    switch (situacao) {
+      case 'valor1':
+        situacaoModificada = 'Lendo'
+        break;
+      case 'valor2':
+          situacaoModificada = 'Lido'
+          break;
+      case 'valor3':
+            situacaoModificada = 'Quero Ler'
+            break;
+      default:
+            situacaoModificada = 'Erro'
+        break;
+     }
+    
+  
+    let pegando_livro_pelo_id = `https://www.googleapis.com/books/v1/volumes/${livro.idLivro}?key=AIzaSyB0tE_alkPXEnuRdhd3PtaUwiFFEISIsSI`
+    let arrayDeResposta = await axios.get(pegando_livro_pelo_id);
+    // console.log(arrayDeResposta.data)
+    let nomeDoLivro = arrayDeResposta.data.volumeInfo.title
+    let imagemdolivro;
+    if(arrayDeResposta.data.volumeInfo.imageLinks == undefined)
+    {
+      imagemdolivro = null
+    }
+    else
+    {
+      imagemdolivro= arrayDeResposta.data.volumeInfo.imageLinks.thumbnail
+    }
+    let quantidadedepaginas = 0;
+    // let objetodelog ={iddoLivro:iddoLivro,livro:req.body.select,data:req.body.data,paginas:req.body.paginas}
+    for (let index = 0; index < objetodousuario[0].log.length; index++) {
+      if (objetodousuario[0].livros[valorDaPosicao].idLivro == objetodousuario[0].log[index].iddoLivro) {
+        quantidadedepaginas += objetodousuario[0].log[index].paginas
+      }
+      
+    }
+  
+    
+    
+    res.render(__dirname+"/views/MeuLivro.ejs",{NomeDoUsuario:objetodousuario[0].name,NomeDoLivro:nomeDoLivro,img:imagemdolivro,Situacao:situacaoModificada,Paginas:quantidadedepaginas})
+  });
+  
 module.exports = router;
 
 
