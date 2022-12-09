@@ -134,10 +134,10 @@ router.get('/DashBord/:id', async(req, res, next) => {
  
   
   try {
-    let arrayDeLivrosDoUsario = objetodousuario[0].livros
-
+    let arrayDeLivrosDoUsario = objetodousuario[0].log
+//
     for (let index = 0; index < arrayDeLivrosDoUsario.length; index++) {
-      quantidadedepaginas +=  parseInt(arrayDeLivrosDoUsario[index].numeroDePaginasLivro, 10);
+      quantidadedepaginas +=  parseInt(arrayDeLivrosDoUsario[index].paginas, 10);
   }
 
   } catch (error) {
@@ -318,7 +318,7 @@ router.post('/DashBord/:id/CadastroDeLivro', async(req, res, next) => {
   let numeroDePaginasLivro;
   numeroDePaginasLivro = req.body.NumeroDePaginas
 
-   let objetoNovoLivro = {idLivro:iddoLivro,situacaoDoLivro:situacaoDoLivro,numeroDePaginasLivro:numeroDePaginasLivro}
+   let objetoNovoLivro = {idLivro:iddoLivro,situacaoDoLivro:situacaoDoLivro}
 
    //pegando o array do usuario
   objetodousuario =  await UserModel.find({_id:valordoid})
@@ -359,7 +359,7 @@ router.get('/DashBord/:id/AlterarLivro/:posicaodolivro', async(req, res, next) =
 
   
   
-  res.render(__dirname+"/views/AlterarLivro.ejs",{NomeDoLivro:nomeDoLivro,NumeroDePaginas:objetodousuario[0].livros[valorDaPosicao].numeroDePaginasLivro})
+  res.render(__dirname+"/views/AlterarLivro.ejs",{NomeDoLivro:nomeDoLivro})
 });
 
 
@@ -387,8 +387,8 @@ router.post('/DashBord/:id/AlterarLivro/:posicaodolivro', async(req, res, next) 
     _id: valordoid
 }, {
     $set: {
-        livros: arrayDeLivrosDoUsario
-    }
+        livros: arrayDeLivrosDoUsario,
+      }
 }, {
     new: true // retorna o novo objeto
 })
@@ -407,16 +407,38 @@ router.get('/DashBord/:id/MinhaLeitura/', async(req, res, next) => {
   let arryLivros = objetodousuario[0].livros
   console.log(arryLivros)
   let arrayParaSerLido = [];
+  let porcentagem;
+
+  //peagando a soma das paginas lidas de um livro
+
+
+ 
+  let numerolido = 0;
 
   //pegando o nome do livro com base no id
 
   for (let index = 0; index < arryLivros.length; index++) {
+
+    for (let j = 0; j < objetodousuario[0].log.length; j++) {
+
+      if (arryLivros[index].idLivro == objetodousuario[0].log[j].iddoLivro) {
+          numerolido += parseInt(objetodousuario[0].log[j].paginas,10)
+      }
+      
+    }
+
     let pegando_livro_pelo_id = `https://www.googleapis.com/books/v1/volumes/${arryLivros[index].idLivro}?key=AIzaSyB0tE_alkPXEnuRdhd3PtaUwiFFEISIsSI`
     let arrayDeResposta = await axios.get(pegando_livro_pelo_id);
    // console.log(arrayDeResposta)
-   let numeropaginas = arrayDeResposta.data.volumeInfo.pageCount
-   let numerolido = parseInt(arryLivros[index].numeroDePaginasLivro,10)
-   let porcentagem =  ((numerolido * 100)/numeropaginas).toFixed(1)
+   if (parseInt(arryLivros[index].numeroDePaginasLivro,10) != 0) {
+    let numeropaginas = arrayDeResposta.data.volumeInfo.pageCount
+  //  = parseInt(arryLivros[index].numeroDePaginasLivro,10)
+   porcentagem =  ((numerolido * 100)/numeropaginas).toFixed(1)
+   }
+   else{
+    porcentagem = 0
+   }
+   
    let situacaoDoLivro = arryLivros[index].situacaoDoLivro
    let situacaoModificada;
    switch (situacaoDoLivro) {
@@ -435,7 +457,7 @@ router.get('/DashBord/:id/MinhaLeitura/', async(req, res, next) => {
    }
 
    // porcentagem
-    arrayParaSerLido[index] = {nome:arrayDeResposta.data.volumeInfo.title,porcentagem:porcentagem,situacao:situacaoModificada,numeroLido:arryLivros[index].numeroDePaginasLivro};
+    arrayParaSerLido[index] = {nome:arrayDeResposta.data.volumeInfo.title,porcentagem:porcentagem,situacao:situacaoModificada};
     
   }
   console.log(arrayParaSerLido)
@@ -472,6 +494,51 @@ console.log(objetoAlterado)
 })
       res.redirect(`/DashBord/${valordoid}`)
 });
+
+
+
+router.get('/DashBord/:id/AdicionarRotina', async(req, res, next) => {
+  let valordoid = req.params.id
+  objetodousuario =  await UserModel.find({_id:valordoid})
+  let email = objetodousuario[0].email
+  let nome = objetodousuario[0].name
+  let livros = objetodousuario[0].livros
+  //console.log(livros)
+  //array dos nomes dos livros
+  let arraydosnomesdoslivros = []
+  for (let index = 0; index < livros.length; index++) {
+    let pegando_livro_pelo_id = `https://www.googleapis.com/books/v1/volumes/${livros[index].idLivro}?key=AIzaSyB0tE_alkPXEnuRdhd3PtaUwiFFEISIsSI`
+    let arrayDeResposta = await axios.get(pegando_livro_pelo_id);
+    console.log(arrayDeResposta)
+    arraydosnomesdoslivros[index] = arrayDeResposta.data.volumeInfo.title
+  }
+  res.render(__dirname+'/views/adicionarRotina.ejs',{infolivro:arraydosnomesdoslivros})
+});
+
+
+router.post('/DashBord/:id/AdicionarRotina', async(req, res, next) => {
+  let valordoid = req.params.id
+  objetodousuario =  await UserModel.find({_id:valordoid})
+  let log = objetodousuario[0].log
+
+  let apigoogleBook = `https://www.googleapis.com/books/v1/volumes?q=${req.body.select}&key=AIzaSyB0tE_alkPXEnuRdhd3PtaUwiFFEISIsSI`
+  let arrayDeResposta = await axios.get(apigoogleBook);
+  let iddoLivro = arrayDeResposta.data.items[0].id
+
+  let objetodelog ={iddoLivro:iddoLivro,livro:req.body.select,data:req.body.data,paginas:req.body.paginas}
+  log.push(objetodelog)
+
+  await UserModel.findOneAndUpdate({
+    _id: valordoid
+    }, {
+        $set: {
+            log: log,
+          }
+    }, {
+        new: true // retorna o novo objeto
+    })
+    res.redirect(`/DashBord/${valordoid}`)
+  });
 
 
 module.exports = router;

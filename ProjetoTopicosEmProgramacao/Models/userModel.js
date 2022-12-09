@@ -9,6 +9,7 @@ const UserSchema = new Schema({
     senha:String,
     name:String,
     livros:[],
+    log:[],
 });
 
 const UserModel = mongoose.model('users',UserSchema);
