@@ -21,20 +21,6 @@ router.get('/', async(req, res, next) => {
   tamanho_do_array = emails.length;
 });
 
-router.get('/indexcss', (req, res, next) => {
-  res.sendFile(__dirname+'/views/index.css')
-});
-
-router.get('/resetcss', (req, res, next) => {
-  res.sendFile(__dirname+'/views/reset.css')
-});
-router.get('/imgreading', (req, res, next) => {
-  res.sendFile(__dirname+'/views/Reading....svg')
-});
-
-router.get('/CreateCountcss', (req, res, next) => {
-  res.sendFile(__dirname+'/views/CreateCount.css')
-});
 /*
 
 
