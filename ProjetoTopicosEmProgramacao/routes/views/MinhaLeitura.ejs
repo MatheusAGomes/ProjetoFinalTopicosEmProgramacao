@@ -12,20 +12,20 @@
 <body>
     <div id="Menu">
         <h1><%= NomeDoUsuario%></h1>
-        <input type="button" value="Resumo" id="btnAcionarResumo">
-        <input type="button" value="Minhas Leituras" id="btnAcionarMinhasLeituras">
-        <input type="button" value="Pesquisar Livros" id="btnAcionarPesquisaDeLivros">
+        <input type="button" value="Resumo" id="btnAcionarResumo" onclick="location.href = '/DashBord/<%= usuarioID%>'">
+        <input type="button" value="Minhas Leituras" id="btnAcionarMinhasLeituras" onclick="location.href = '/DashBord/<%= usuarioID%>/MinhaLeitura'">
+        <input type="button" value="Pesquisar Livros" id="btnAcionarPesquisaDeLivros" onclick="location.href = '/MinhaPesquisaComResposta/<%= usuarioID%>/book/'">
     </div>
     <div id="DashBordMinhaPesquisa">  
-        <h1>Minhas Leitura</h1>
+        <h1>MinhaPesquisa</h1>
         <div>
             <table>
                 <form method="POST">
 
                     <!-- aqui tenta fazer uma div com estilização-->
                     <% if(infolivro != []) { %>
-                    <% for(;i < (infolivro.length);i++ ) { %>
-                        <div name=<%= i%>>
+                    <% for(let i=0;i < (infolivro.length);i++ ) { %>
+                        <div>
                         <img src=<%= infolivro[i].img %>/>
                         <h1><%= infolivro[i].nome %></h1>
                         <h1><%= infolivro[i].porcentagem %> %</h1>

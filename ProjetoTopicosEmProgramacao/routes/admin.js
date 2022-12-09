@@ -73,6 +73,7 @@ router.post('/NovoUsuario', async (req, res, next) => {
         }
         
         for (let index = 0; index < tamanho_do_array; index++) {
+          console.log(req.body.userEmail);
           if (req.body.userEmail == emails[index].email) {
             if(req.body.userSenha == emails[index].senha)
             {
@@ -149,7 +150,7 @@ router.get('/DashBord/:id', async(req, res, next) => {
 
   
 
-  res.render(__dirname+'/views/DashBord.ejs',{NomeDoUsuario:objetodousuario[0].name,quantidadedepaginas:quantidadedepaginas,quantidadedelivros:quantidadedeLivros})
+  res.render(__dirname+'/views/DashBord.ejs',{NomeDoUsuario:objetodousuario[0].name,quantidadedepaginas:quantidadedepaginas,quantidadedelivros:quantidadedeLivros,usuarioID:valordoid})
 });
 
 
@@ -216,6 +217,7 @@ router.get(['/MinhaPesquisaComResposta/:id/book/','/MinhaPesquisaComResposta/:id
   let autor = ""
   let description = ""
   let numeroDePaginasLivro = ""
+  let id = req.params.id;
   try {
   console.log(req.params.id)
   console.log(req.params.idbook)
@@ -237,7 +239,7 @@ router.get(['/MinhaPesquisaComResposta/:id/book/','/MinhaPesquisaComResposta/:id
   autor = arrayDeResposta.data.volumeInfo.authors[0]
   description = arrayDeResposta.data.volumeInfo.description
   numeroDePaginasLivro = arrayDeResposta.data.volumeInfo.pageCount;
-  return res.render(__dirname+"/views/MinhaPesquisaComResposta.ejs",{NomeDoUsuario:nomedoUsuario,NomeDoLivro:titulo,Autor:autor,description:description,quantidadedePaginas:numeroDePaginasLivro})
+  return res.render(__dirname+"/views/MinhaPesquisaComResposta.ejs",{NomeDoUsuario:nomedoUsuario,NomeDoLivro:titulo,Autor:autor,description:description,quantidadedePaginas:numeroDePaginasLivro,usuarioID:id})
   
 } catch (error) {
   
@@ -246,7 +248,7 @@ router.get(['/MinhaPesquisaComResposta/:id/book/','/MinhaPesquisaComResposta/:id
 
 
 
-res.render(__dirname+"/views/MinhaPesquisaComResposta.ejs",{NomeDoUsuario:nomedoUsuario,NomeDoLivro:titulo,Autor:autor,description:description,quantidadedePaginas:numeroDePaginasLivro})
+res.render(__dirname+"/views/MinhaPesquisaComResposta.ejs",{NomeDoUsuario:nomedoUsuario,NomeDoLivro:titulo,Autor:autor,description:description,quantidadedePaginas:numeroDePaginasLivro,usuarioID:id})
 
 });
 
@@ -478,9 +480,9 @@ router.get('/DashBord/:id/MinhaLeitura/', async(req, res, next) => {
   }
   console.log(arrayParaSerLido)
   //console.log(arrayDeResposta.data)
-  let numerodoarray=0;
 
-  res.render(__dirname+"/views/MinhaLeitura.ejs",{NomeDoUsuario:objetodousuario[0].name,infolivro:arrayParaSerLido,i:numerodoarray})
+
+  res.render(__dirname+"/views/MinhaLeitura.ejs",{NomeDoUsuario:objetodousuario[0].name,infolivro:arrayParaSerLido,usuarioID:valordoid})
 });
 
 
@@ -557,59 +559,6 @@ router.post('/DashBord/:id/AdicionarRotina', async(req, res, next) => {
   });
 
 
-  router.get('/DashBord/:id/MeuLivro/:posicaodolivro', async(req, res, next) => {
-    //alteracao a partir da posicao do array
-    //0
-    let valordoid = req.params.id
-    let valorDaPosicao = req.params.posicaodolivro;
-    objetodousuario =  await UserModel.find({_id:valordoid})
-    let livro = objetodousuario[0].livros[valorDaPosicao]
-    let situacao = objetodousuario[0].livros[valorDaPosicao].situacaoDoLivro;
-    console.log(situacao)
-    let situacaoModificada;
-    switch (situacao) {
-      case 'valor1':
-        situacaoModificada = 'Lendo'
-        break;
-      case 'valor2':
-          situacaoModificada = 'Lido'
-          break;
-      case 'valor3':
-            situacaoModificada = 'Quero Ler'
-            break;
-      default:
-            situacaoModificada = 'Erro'
-        break;
-     }
-    
-  
-    let pegando_livro_pelo_id = `https://www.googleapis.com/books/v1/volumes/${livro.idLivro}?key=AIzaSyB0tE_alkPXEnuRdhd3PtaUwiFFEISIsSI`
-    let arrayDeResposta = await axios.get(pegando_livro_pelo_id);
-    // console.log(arrayDeResposta.data)
-    let nomeDoLivro = arrayDeResposta.data.volumeInfo.title
-    let imagemdolivro;
-    if(arrayDeResposta.data.volumeInfo.imageLinks == undefined)
-    {
-      imagemdolivro = null
-    }
-    else
-    {
-      imagemdolivro= arrayDeResposta.data.volumeInfo.imageLinks.thumbnail
-    }
-    let quantidadedepaginas = 0;
-    // let objetodelog ={iddoLivro:iddoLivro,livro:req.body.select,data:req.body.data,paginas:req.body.paginas}
-    for (let index = 0; index < objetodousuario[0].log.length; index++) {
-      if (objetodousuario[0].livros[valorDaPosicao].idLivro == objetodousuario[0].log[index].iddoLivro) {
-        quantidadedepaginas += objetodousuario[0].log[index].paginas
-      }
-      
-    }
-  
-    
-    
-    res.render(__dirname+"/views/MeuLivro.ejs",{NomeDoUsuario:objetodousuario[0].name,NomeDoLivro:nomeDoLivro,img:imagemdolivro,Situacao:situacaoModificada,Paginas:quantidadedepaginas})
-  });
-  
 module.exports = router;
 
 
