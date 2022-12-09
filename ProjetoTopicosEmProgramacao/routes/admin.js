@@ -311,6 +311,16 @@ router.post('/DashBord/:id/CadastroDeLivro', async(req, res, next) => {
   let arrayDeResposta = await axios.get(apigoogleBook);
   // peguei o id
   let iddoLivro = arrayDeResposta.data.items[0].id
+  let imagemdolivro
+ // console.log(arrayDeResposta.data.items[0].volumeInfo)
+  if(arrayDeResposta.data.items[0].volumeInfo.imageLinks == undefined)
+  {
+    imagemdolivro = null
+  }
+  else
+  {
+    imagemdolivro= arrayDeResposta.data.items[0].volumeInfo.imageLinks.thumbnail
+  }
   console.log(iddoLivro)
   //situacao
   let situacaoDoLivro;
@@ -318,7 +328,7 @@ router.post('/DashBord/:id/CadastroDeLivro', async(req, res, next) => {
   let numeroDePaginasLivro;
   numeroDePaginasLivro = req.body.NumeroDePaginas
 
-   let objetoNovoLivro = {idLivro:iddoLivro,situacaoDoLivro:situacaoDoLivro}
+   let objetoNovoLivro = {idLivro:iddoLivro,situacaoDoLivro:situacaoDoLivro,img:imagemdolivro}
 
    //pegando o array do usuario
   objetodousuario =  await UserModel.find({_id:valordoid})
@@ -432,6 +442,7 @@ router.get('/DashBord/:id/MinhaLeitura/', async(req, res, next) => {
    // console.log(arrayDeResposta)
    if (parseInt(arryLivros[index].numeroDePaginasLivro,10) != 0) {
     let numeropaginas = arrayDeResposta.data.volumeInfo.pageCount
+    //let description =  arrayDeResposta.data.volumeInfo.description
   //  = parseInt(arryLivros[index].numeroDePaginasLivro,10)
    porcentagem =  ((numerolido * 100)/numeropaginas).toFixed(1)
    }
@@ -440,6 +451,7 @@ router.get('/DashBord/:id/MinhaLeitura/', async(req, res, next) => {
    }
    
    let situacaoDoLivro = arryLivros[index].situacaoDoLivro
+   let img = arryLivros[index].img
    let situacaoModificada;
    switch (situacaoDoLivro) {
     case 'valor1':
@@ -457,7 +469,7 @@ router.get('/DashBord/:id/MinhaLeitura/', async(req, res, next) => {
    }
 
    // porcentagem
-    arrayParaSerLido[index] = {nome:arrayDeResposta.data.volumeInfo.title,porcentagem:porcentagem,situacao:situacaoModificada};
+    arrayParaSerLido[index] = {nome:arrayDeResposta.data.volumeInfo.title,porcentagem:porcentagem,situacao:situacaoModificada,img:img};
     
   }
   console.log(arrayParaSerLido)

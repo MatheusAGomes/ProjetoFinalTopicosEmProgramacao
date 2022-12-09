@@ -26,10 +26,10 @@
                     <% if(infolivro != []) { %>
                     <% for(let i=0;i < (infolivro.length);i++ ) { %>
                         <div>
+                        <img src=<%= infolivro[i].img %>/>
                         <h1><%= infolivro[i].nome %></h1>
                         <h1><%= infolivro[i].porcentagem %> %</h1>
                         <h1><%= infolivro[i].situacao %></h1>
-                        <h1><%= infolivro[i].nome %></h1>
                         </div>
                       <% } %>
                       <% }else{ %>
