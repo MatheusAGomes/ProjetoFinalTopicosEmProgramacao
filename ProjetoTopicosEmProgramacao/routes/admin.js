@@ -13,19 +13,19 @@ const saltRounds = 10
 
 router.set('view engine','ejs')
 router.use('/public', express.static(path.resolve(__dirname, 'public')));
+router.use(express.json())
 
-const assisnaturas = new Map([
-  [1 ,{preco: 10, nome: "basica"}],
-  [2 ,{preco: 20, nome: "intermediaria"}],
-])
-
-const Enviroment = process.env.NODE_ENV === 'production'?
+const Enviroment = process.env.NODE_ENV === "production"?
   paypal.core.LiveEnvironment:
   paypal.core.SandboxEnvironment;
-  
+   
 const paypalClient = new paypal.core.PayPalHttpClient(new Enviroment(
-  process.env.PAYPAL_CLIENT_ID,process.env.PAYPAL_CLIENT_SECRET
-))
+  process.env.PAYPAL_CLIENT_ID, process.env.PAYPAL_CLIENT_SECRET))
+
+  const assinaturas = new Map([
+    [1, { preco: 100, nome: "Learn React Today" }],
+    [2, { preco: 200, nome: "Learn CSS Today" }],
+  ])
 
 //"https://www.googleapis.com/books/v1/volumes?q=HarryPotter&key=AIzaSyB0tE_alkPXEnuRdhd3PtaUwiFFEISIsSI";
 let emails;
@@ -57,7 +57,7 @@ router.post('/', async (req, res, next) => {
         const cmp = await bcrypt.compare(req.body.senhaText, user.senha);
         if (cmp) {
             console.log('successful login')
-            return res.redirect(`/DashBord/${user._id.toString()}`)
+            return res.redirect(`/${user._id.toString()}/payment`)
         } else {
             console.log("Wrong username or password.")
             return
@@ -197,7 +197,7 @@ MINHA PESQUISA
 // });
 // router.post('/MinhaPesquisa/:id', async(req, res, next) => {
 //   let valordoid = req.params.id
-//   let teste;
+//   let teste;res.render
 //   objetodousuario =  await UserModel.find({_id:valordoid})
 
 //   let nomeDoLivro = req.body.NomeDoLivro.trim()
@@ -572,48 +572,57 @@ router.post('/DashBord/:id/AdicionarRotina', async(req, res, next) => {
     res.redirect(`/DashBord/${valordoid}`)
   });
 
-  router.get('/payment',async(req, res, next) =>{
-    res.render(__dirname + '/views/payment.ejs', {clientID: process.env.PAYPAL_CLIENT_ID});
+  router.get('/:id/payment',async(req, res, next) =>{
+    res.render(__dirname + '/views/payment.ejs', {clientID: process.env.PAYPAL_CLIENT_ID,userID: req.params.id});
   })
 
-  router.post('/create-order', async(req,res) =>{
+  router.post("/:id/payment", async (req, res) => {
+    const valorID = req.params.id
     const request = new paypal.orders.OrdersCreateRequest()
-    const total = req.body.items.reduce((sum,item)=>{
-      return sum + assisnaturas.get(item.id).preco * quantity
-    },0)
+    const total = req.body.items.reduce((sum, item) => {
+      return sum + assinaturas.get(item.id).preco * item.quantity
+    }, 0)
     request.prefer("return=representation")
     request.requestBody({
-      intent: 'CAPTURE',
-      purchase_units: [{
-        amount:{
-          currency_code: "BRL",
-          value: total,
-          breakdown:{
-            item_total:{
-              currency_code: "BRL",
-              value: total
-            }
-          }
-        },
-        items: req.body.items.map(item =>{
-          const storeItem = storeItems.get(item.id)
-          return{
-            name: assisnaturas.name,
-            unit_amount:{
-              currency_code: "BRL",
-              value: assisnaturas.preco
+      intent: "CAPTURE",
+      purchase_units: [
+        {
+          amount: {
+            currency_code: "BRL",
+            value: total,
+            breakdown: {
+              item_total: {
+                currency_code: "BRL",
+                value: total,
+              },
             },
-            quantity: 1
-          }
-        })
-      }]
+          },
+          items: req.body.items.map(item => {
+            const assinatura = assinaturas.get(item.id)
+            return {
+              name: assinatura.nome,
+              unit_amount: {
+                currency_code: "BRL",
+                value: assinatura.preco,
+              },
+              quantity: item.quantity,
+            }
+          }),
+        },
+      ],
     })
-    try{
-      const order = await paypalClient.execute(request);
-      res.json({id: order.result.id})
-    }catch(e){
-      res.status(500).json({error: e.message})
+    try {
+      const order = await paypalClient.execute(request)
+      console.log(`order ${order.result.id}`);
+      res.json({ id: order.result.id })
+    } catch (e) {
+      res.status(500).json({ error: e.message })
     }
+  })
+
+  router.get('/payment/:id/capture', async(req,res) =>{
+      console.log("Transacao realizada com sucesso");
+      res.redirect(`/DashBord/${req.params.id}`);
   })
 
 
