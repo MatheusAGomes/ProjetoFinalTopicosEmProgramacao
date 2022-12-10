@@ -1,15 +1,31 @@
+require('dotenv').config()
+
 const express = require('express'),
     router = express(),
     Loaders = require('../startdb.js'),
     UserModel = require('../Models/userModel.js'),
     path = require('path'),
     bcrypt = require('bcrypt'),
-    axios = require('axios');
+    axios = require('axios'),
+    paypal = require('@paypal/checkout-server-sdk');
 
 const saltRounds = 10
 
 router.set('view engine','ejs')
 router.use('/public', express.static(path.resolve(__dirname, 'public')));
+
+const assisnaturas = new Map([
+  [1 ,{preco: 10, nome: "basica"}],
+  [2 ,{preco: 20, nome: "intermediaria"}],
+])
+
+const Enviroment = process.env.NODE_ENV === 'production'?
+  paypal.core.LiveEnvironment:
+  paypal.core.SandboxEnvironment;
+  
+const paypalClient = new paypal.core.PayPalHttpClient(new Enviroment(
+  process.env.PAYPAL_CLIENT_ID,process.env.PAYPAL_CLIENT_SECRET
+))
 
 //"https://www.googleapis.com/books/v1/volumes?q=HarryPotter&key=AIzaSyB0tE_alkPXEnuRdhd3PtaUwiFFEISIsSI";
 let emails;
@@ -555,6 +571,50 @@ router.post('/DashBord/:id/AdicionarRotina', async(req, res, next) => {
     })
     res.redirect(`/DashBord/${valordoid}`)
   });
+
+  router.get('/payment',async(req, res, next) =>{
+    res.render(__dirname + '/views/payment.ejs', {clientID: process.env.PAYPAL_CLIENT_ID});
+  })
+
+  router.post('/create-order', async(req,res) =>{
+    const request = new paypal.orders.OrdersCreateRequest()
+    const total = req.body.items.reduce((sum,item)=>{
+      return sum + assisnaturas.get(item.id).preco * quantity
+    },0)
+    request.prefer("return=representation")
+    request.requestBody({
+      intent: 'CAPTURE',
+      purchase_units: [{
+        amount:{
+          currency_code: "BRL",
+          value: total,
+          breakdown:{
+            item_total:{
+              currency_code: "BRL",
+              value: total
+            }
+          }
+        },
+        items: req.body.items.map(item =>{
+          const storeItem = storeItems.get(item.id)
+          return{
+            name: assisnaturas.name,
+            unit_amount:{
+              currency_code: "BRL",
+              value: assisnaturas.preco
+            },
+            quantity: 1
+          }
+        })
+      }]
+    })
+    try{
+      const order = await paypalClient.execute(request);
+      res.json({id: order.result.id})
+    }catch(e){
+      res.status(500).json({error: e.message})
+    }
+  })
 
 
 module.exports = router;
