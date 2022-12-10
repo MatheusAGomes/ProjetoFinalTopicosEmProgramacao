@@ -1,10 +1,13 @@
-const express = require('express');
-const router = express();
-const Loaders = require('../startdb.js')
-const UserModel = require('../Models/userModel.js');
-const path = require('path');
+const express = require('express'),
+    router = express(),
+    Loaders = require('../startdb.js'),
+    UserModel = require('../Models/userModel.js'),
+    path = require('path'),
+    bcrypt = require('bcrypt'),
+    axios = require('axios');
 
-let axios = require('axios');
+const saltRounds = 10
+
 router.set('view engine','ejs')
 router.use('/public', express.static(path.resolve(__dirname, 'public')));
 
