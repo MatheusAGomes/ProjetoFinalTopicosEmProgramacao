@@ -35,7 +35,7 @@ LOGIN
 
 */
 router.post('/', async (req, res, next) => {
-    const user = await emails.find((x) => x.email === req.body.userText)
+    const user = await UserModel.findOne({email: req.body.userText})
     console.log(user)
     if (user) {
         const cmp = await bcrypt.compare(req.body.senhaText, user.senha);
@@ -72,20 +72,20 @@ router.post('/NovoUsuario', async (req, res, next) => {
         console.log('different passwords')
         return res.redirect('/NovoUsuario')
     }
-    if (emails.some((x) => x.email === req.body.userEmail)) {
+    const user = await UserModel.findOne({email: req.body.userEmail})
+    if (user) {
         console.log('existing email')
         return res.redirect('/NovoUsuario')
     }
     //hash the password
     const hashedPwd = await bcrypt.hash(req.body.userSenha, saltRounds)
 
-    let objeto = {
+    const newUser = await UserModel.create({
         email: req.body.userEmail,
         senha: hashedPwd,
         name: req.body.userNome,
-    }
+    })
 
-    const createCount = await UserModel.create(objeto)
     res.redirect('/');
 });
 
