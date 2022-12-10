@@ -31,22 +31,23 @@ LOGIN
 
 
 */
-router.post('/', (req, res, next) => {
-  console.log('aqui')
-  for (let index = 0; index < tamanho_do_array; index++) {
-    if (req.body.userText == emails[index].email) {
-      if(req.body.senhaText == emails[index].senha)
-      {
-        console.log('aqui')
-       return  res.redirect(`/DashBord/${emails[index]._id.toString()}`)
-      }
-  }
-  }
-  
-  
+router.post('/', async (req, res, next) => {
+    const user = await emails.find((x) => x.email === req.body.userText)
+    console.log(user)
+    if (user) {
+        const cmp = await bcrypt.compare(req.body.senhaText, user.senha);
+        if (cmp) {
+            console.log('successful login')
+            return res.redirect(`/DashBord/${user._id.toString()}`)
+        } else {
+            console.log("Wrong username or password.")
+            return
+        }
+    } else {
+        console.log("Wrong username or password.")
+        return
+    }
 });
-
-
 
 
 /*
@@ -59,36 +60,30 @@ NovoUsuario
 
 */
 
-router.get('/NovoUsuario',  (req, res, next) => {
-  res.render(__dirname+'/views/CreateCount.ejs');
-  
+router.get('/NovoUsuario', (req, res, next) => {
+    res.render(__dirname + '/views/CreateCount.ejs');
 });
 
 router.post('/NovoUsuario', async (req, res, next) => {
-  //mandando para o banco
-        let objeto = {
-          email:req.body.userEmail,
-          senha:req.body.userSenha,
-          name:req.body.userNome,
-        }
-        
-        for (let index = 0; index < tamanho_do_array; index++) {
-          console.log(req.body.userEmail);
-          if (req.body.userEmail == emails[index].email) {
-            if(req.body.userSenha == emails[index].senha)
-            {
-              res.redirect('/NovoUsuario');
-            }
-        }
-        }
-        
-        let senhaConf = req.body.userConfirmeSenha
+    if (req.body.userSenha !== req.body.userConfirmeSenha) {
+        console.log('different passwords')
+        return res.redirect('/NovoUsuario')
+    }
+    if (emails.some((x) => x.email === req.body.userEmail)) {
+        console.log('existing email')
+        return res.redirect('/NovoUsuario')
+    }
+    //hash the password
+    const hashedPwd = await bcrypt.hash(req.body.userSenha, saltRounds)
 
-        if( senhaConf !== "" &&  objeto.senha === senhaConf){
-          const createCount =  await UserModel.create(objeto)
-          res.redirect('/');
-        }else
-        res.redirect('/NovoUsuario');
+    let objeto = {
+        email: req.body.userEmail,
+        senha: hashedPwd,
+        name: req.body.userNome,
+    }
+
+    const createCount = await UserModel.create(objeto)
+    res.redirect('/');
 });
 
 
