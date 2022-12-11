@@ -353,7 +353,6 @@ router.get(['/MinhaPesquisaComResposta/:id/book/','/MinhaPesquisaComResposta/:id
   console.log(req.params.idbook)
   
   let valordoid = req.params.id
-    let teste;
     objetodousuario =  await UserModel.find({_id:req.params.id})
   
   let pegando_livro_pelo_id = `https://www.googleapis.com/books/v1/volumes/${req.params.idbook}?key=AIzaSyB0tE_alkPXEnuRdhd3PtaUwiFFEISIsSI`
@@ -376,7 +375,7 @@ router.get(['/MinhaPesquisaComResposta/:id/book/','/MinhaPesquisaComResposta/:id
   
 }
  
-
+nomedoUsuario = objetodousuario[0].name
 
 
 res.render(__dirname+"/views/MinhaPesquisaComResposta.ejs",{NomeDoUsuario:nomedoUsuario,NomeDoLivro:titulo,Autor:autor,description:description,quantidadedePaginas:numeroDePaginasLivro,usuarioID:id,img:null})
