@@ -17,7 +17,7 @@ const saltRounds = 10
 
 router.use(session({
   secret:'secret-key',
-  saveUninitialized:true,
+  saveUninitialized:false,
 }))
 
 router.set('view engine','ejs')
@@ -66,7 +66,7 @@ router.post('/', async (req, res, next) => {
         if (cmp) {
             console.log('successful login')
             console.log(user.tipo)
-            if(('tipo' in user) && user.tipo !== "Pagante"){
+            if(user.statusPag !== true){
               return res.redirect(`/${user._id.toString()}/payment`)
             }else{
               return res.redirect(`DashBord/${user._id.toString()}`) 
@@ -151,10 +151,11 @@ router.get('/DashBord/:id', async(req, res, next) => {
   let valordoid = req.params.id
   let quantidadedepaginas = 0;
   let quantidadedeLivros = 0;
-  objetodousuario =  await UserModel.find({_id:valordoid})
- 
+  
+  let objetodousuario =  await UserModel.find({_id:valordoid})
+  let nome = objetodousuario[0].name;
   //pegando o numero de paginas lidas
- 
+  
   
   try {
     let arrayDeLivrosDoUsario = objetodousuario[0].log
@@ -185,11 +186,12 @@ router.get('/DashBord/:id', async(req, res, next) => {
   
    
   let imagem_ultimo_Livro = 'https://www.imagensempng.com.br/wp-content/uploads/2021/02/Ponto-Interrogacao-Png-1024x1024.png'
-  let nomeUltimoLivro = 'Sem Atividade'
-  let situacaoModificada = 'Sem Atividade'
-  let porcentagem = 'Sem Atividade'
+   
+   
   let log = []
-
+  let situacaoModificada = ''
+  let nomeUltimoLivro = ''
+  let porcentagem = 0
 
   // Ultimo livro
   try{
@@ -208,10 +210,10 @@ router.get('/DashBord/:id', async(req, res, next) => {
   
 
   //nome ultimo livro
-  let nomeUltimoLivro = objetodousuario[0].log[index_ultimo_log].livro
+   nomeUltimoLivro = objetodousuario[0].log[index_ultimo_log].livro
 
   //situacao do ultimo livro
-  let situacaoModificada;
+   situacaoModificada;
 
   switch (objetodousuario[0].livros[index_do_ultimo_livro].situacaoDoLivro) {
     case 'valor1':
@@ -231,6 +233,7 @@ router.get('/DashBord/:id', async(req, res, next) => {
   // imagem ultimo livro
    
    imagem_ultimo_Livro = objetodousuario[0].livros[index_do_ultimo_livro].img
+
   
   // porcentagem ultimo livro
           let numerodepags = 0;
@@ -271,12 +274,12 @@ router.get('/DashBord/:id', async(req, res, next) => {
           porcentagem = 100
         }
 
-         log = objetodousuario[0].log;
+        log = objetodousuario[0].log;
         console.log(log)
       }catch(error){
        
       }
-  res.render(__dirname+'/views/DashBord.ejs',{NomeDoUsuario:objetodousuario[0].name,quantidadedepaginas:quantidadedepaginas,quantidadedelivros:quantidadedeLivros,usuarioID:valordoid,imgUltimoLivro:imagem_ultimo_Livro,NomeDoUltimoLivro:nomeUltimoLivro,StatusDoUltimoLivro:situacaoModificada,PorcentagemUltimoLivro:porcentagem,Log:log})
+  res.render(__dirname+'/views/DashBord.ejs',{NomeDoUsuario:nome,quantidadedepaginas:quantidadedepaginas,quantidadedelivros:quantidadedeLivros,usuarioID:valordoid,imgUltimoLivro:imagem_ultimo_Livro,NomeDoUltimoLivro:nomeUltimoLivro,StatusDoUltimoLivro:situacaoModificada,PorcentagemUltimoLivro:porcentagem,Log:log})
 });
 
 
@@ -688,7 +691,7 @@ router.get('/DashBord/:id/AlterarUsuario/', async(req, res, next) => {
   console.log(objetodousuario)
  let email = objetodousuario[0].email
  let nome = objetodousuario[0].name
-  res.render(__dirname+'/views/AlterarUsuario.ejs',{Nome:nome,Email:email})
+  res.render(__dirname+'/views/AlterarUsuario.ejs',{Nome:nome,Email:email,usuarioID:valordoid})
 });
 
 
@@ -816,15 +819,11 @@ router.post('/DashBord/:id/AdicionarRotina/:idDoLivro', async(req, res, next) =>
 
   router.get('/payment/:id/capture', async(req,res) =>{
       //Atualiza status
-      await UserModel.findOneAndUpdate({id: req.params.id},{tipo: "Pagante"})
+      await UserModel.findOneAndUpdate({_id: req.params.id},{statusPag: true})
       res.redirect(`/DashBord/${req.params.id}`);
   })
 
-  router.get('/payment/:id/capture', async(req,res) =>{
-    //Atualiza status
-    await UserModel.findOneAndUpdate({id: req.params.id},{tipo: "Pagante"})
-    res.render(__dirname+'/views/.ejs')
-})
+ 
 
 
 module.exports = router;
