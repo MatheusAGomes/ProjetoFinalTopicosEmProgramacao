@@ -23,8 +23,7 @@ const paypalClient = new paypal.core.PayPalHttpClient(new Enviroment(
   process.env.PAYPAL_CLIENT_ID, process.env.PAYPAL_CLIENT_SECRET))
 
   const assinaturas = new Map([
-    [1, { preco: 100, nome: "Learn React Today" }],
-    [2, { preco: 200, nome: "Learn CSS Today" }],
+    [1, { preco: 25, nome: "Assinatura Reading" }],
   ])
 
 //"https://www.googleapis.com/books/v1/volumes?q=HarryPotter&key=AIzaSyB0tE_alkPXEnuRdhd3PtaUwiFFEISIsSI";
@@ -57,7 +56,12 @@ router.post('/', async (req, res, next) => {
         const cmp = await bcrypt.compare(req.body.senhaText, user.senha);
         if (cmp) {
             console.log('successful login')
-            return res.redirect(`/${user._id.toString()}/payment`)
+            console.log(user.tipo)
+            if(('tipo' in user) && user.tipo !== "Pagante"){
+              return res.redirect(`/${user._id.toString()}/payment`)
+            }else{
+              return res.redirect(`DashBord/${user._id.toString()}`) 
+            }
         } else {
             console.log("Wrong username or password.")
             return
@@ -100,9 +104,10 @@ router.post('/NovoUsuario', async (req, res, next) => {
         email: req.body.userEmail,
         senha: hashedPwd,
         name: req.body.userNome,
+        tipo: "gratuito",
     })
 
-    res.redirect('/');
+    res.redirect(`/${newUser._id.toString()}/payment`);
 });
 
 
@@ -159,9 +164,6 @@ router.get('/DashBord/:id', async(req, res, next) => {
   } catch (error) {
     
   }
-  
- 
-
   
 
   res.render(__dirname+'/views/DashBord.ejs',{NomeDoUsuario:objetodousuario[0].name,quantidadedepaginas:quantidadedepaginas,quantidadedelivros:quantidadedeLivros,usuarioID:valordoid})
@@ -621,7 +623,8 @@ router.post('/DashBord/:id/AdicionarRotina', async(req, res, next) => {
   })
 
   router.get('/payment/:id/capture', async(req,res) =>{
-      console.log("Transacao realizada com sucesso");
+      //Atualiza status
+      await UserModel.findOneAndUpdate({id: req.params.id},{tipo: "Pagante"})
       res.redirect(`/DashBord/${req.params.id}`);
   })
 
