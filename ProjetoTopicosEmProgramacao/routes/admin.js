@@ -3,7 +3,7 @@ let alert = require('alert');
 
 
 
-
+const session = require('express-session')
 const express = require('express'),
     router = express(),
     Loaders = require('../startdb.js'),
@@ -14,6 +14,11 @@ const express = require('express'),
     paypal = require('@paypal/checkout-server-sdk');
 
 const saltRounds = 10
+
+router.use(session({
+  secret:'secret-key',
+  saveUninitialized:true,
+}))
 
 router.set('view engine','ejs')
 router.use('/public', express.static(path.resolve(__dirname, 'public')));
@@ -814,6 +819,12 @@ router.post('/DashBord/:id/AdicionarRotina/:idDoLivro', async(req, res, next) =>
       await UserModel.findOneAndUpdate({id: req.params.id},{tipo: "Pagante"})
       res.redirect(`/DashBord/${req.params.id}`);
   })
+
+  router.get('/payment/:id/capture', async(req,res) =>{
+    //Atualiza status
+    await UserModel.findOneAndUpdate({id: req.params.id},{tipo: "Pagante"})
+    res.render(__dirname+'/views/.ejs')
+})
 
 
 module.exports = router;
