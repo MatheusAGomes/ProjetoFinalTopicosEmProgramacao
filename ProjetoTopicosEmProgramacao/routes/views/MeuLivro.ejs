@@ -25,7 +25,9 @@
                     <h1><%= NomeDoLivro%></h1>
                     <h1><%= Situacao%></h1>
                     <h1><%= Paginas%></h1>
-                    <button type="submit">Adicionar Rotina</button>
+                    <!--/DashBord/:id/AdicionarRotina/:idDoLivro-->
+                    <input type="button" onclick="location.href = '/DashBord/<%= usuarioID%>/AdicionarRotina/<%= livroId%>'" value="Adicionar Rotina"></input>
+                    <input type="button" onclick="location.href = '/DashBord/<%= usuarioID%>/AlterarLivro/<%=indexDoLivro%>'" value="Alterar Livro"></input>
                     
                     
             </form>

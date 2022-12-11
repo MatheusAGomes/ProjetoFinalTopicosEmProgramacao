@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="stylesheet" href="/public/scripts/reset.css ">
-    <link rel="stylesheet" href="/public/scripts/AlterarLivro.css">
+    <link href="stylesheet" href="/public/css/reset.css ">
+    <link rel="stylesheet" href="/public/css/AlterarLivro.css">
     <title>Alterar Livro </title>
 </head>
 
@@ -23,7 +23,7 @@
                 <input type="button" value="Meu Perfil" id="btnMeuPerfil">
                 <input type="button" value="Logout" id="btnLogout">
             </div>
-            <h1 id="nomeusuario">Nome Do Usuário</h1>
+            <h1 id="nomeusuario"><%=NomeDoUsuario%></h1>
         </div>
 
         <div class="direita">
@@ -34,8 +34,7 @@
                 <form method="POST">
                     <div class="fundocadastro">
                         <div class="nomelivro">
-                            <label>Nome Do Livro: </label>
-                            <input type="text" name="userNomeDoLivro" value=<%=NomeDoLivro%>>
+                            <h1><%=NomeDoLivro%></h1>
                         </div>
                         <div class="situacao">
                             <label>Situacação: </label>

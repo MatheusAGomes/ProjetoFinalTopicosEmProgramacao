@@ -245,7 +245,7 @@ router.get(['/MinhaPesquisaComResposta/:id/book/','/MinhaPesquisaComResposta/:id
   let pegando_livro_pelo_id = `https://www.googleapis.com/books/v1/volumes/${req.params.idbook}?key=AIzaSyB0tE_alkPXEnuRdhd3PtaUwiFFEISIsSI`
   
   let arrayDeResposta = await axios.get(pegando_livro_pelo_id);
-  //console.log(arrayDeResposta.data.volumeInfo.title)
+  console.log(arrayDeResposta.data.volumeInfo.title)
 
 
 
@@ -363,7 +363,9 @@ router.get('/DashBord/:id/AlterarLivro/:posicaodolivro', async(req, res, next) =
   //0
   let valordoid = req.params.id
   let valorDaPosicao = req.params.posicaodolivro;
+  console.log(valorDaPosicao)
   objetodousuario =  await UserModel.find({_id:valordoid})
+  console.log(objetodousuario[0].livros[valorDaPosicao])
   let livro = objetodousuario[0].livros[valorDaPosicao]
 
   let pegando_livro_pelo_id = `https://www.googleapis.com/books/v1/volumes/${livro.idLivro}?key=AIzaSyB0tE_alkPXEnuRdhd3PtaUwiFFEISIsSI`
@@ -373,7 +375,7 @@ router.get('/DashBord/:id/AlterarLivro/:posicaodolivro', async(req, res, next) =
 
   
   
-  res.render(__dirname+"/views/AlterarLivro.ejs",{NomeDoLivro:nomeDoLivro})
+  res.render(__dirname+"/views/AlterarLivro.ejs",{NomeDoUsuario:objetodousuario[0].name,NomeDoLivro:nomeDoLivro})
 });
 
 
@@ -383,27 +385,31 @@ router.post('/DashBord/:id/AlterarLivro/:posicaodolivro', async(req, res, next) 
   let valordoid = req.params.id
   let valorDaPosicao = req.params.posicaodolivro;
 
+  let objetodousuario =  await UserModel.find({_id:valordoid})
+  console.log(objetodousuario[0].livros[valorDaPosicao])
+  let livro = objetodousuario[0].livros[valorDaPosicao]
   //pegando os valores att do livro
   //id: eu tenho o nome do livro colocado 
-  let nomedoLivro = req.body.userNomeDoLivro;
-  let apigoogleBook = `https://www.googleapis.com/books/v1/volumes?q=${nomedoLivro}&key=AIzaSyB0tE_alkPXEnuRdhd3PtaUwiFFEISIsSI`
-  let arrayDeResposta = await axios.get(apigoogleBook);
-  let iddoLivro = arrayDeResposta.data.items[0].id
-  console.log(arrayDeResposta.data.items[0])
+ // let nomedoLivro = req.body.userNomeDoLivro;
+ let pegando_livro_pelo_id = `https://www.googleapis.com/books/v1/volumes/${objetodousuario[0].livros[valorDaPosicao].idLivro}?key=AIzaSyB0tE_alkPXEnuRdhd3PtaUwiFFEISIsSI`
+ let arrayDeResposta = await axios.get(pegando_livro_pelo_id);
+ console.log(arrayDeResposta.data)
+  let iddoLivro = arrayDeResposta.data.id
+  //console.log(arrayDeResposta.data.items[0])
   let imagemdolivro
  // console.log(arrayDeResposta.data.items[0].volumeInfo)
-  if(arrayDeResposta.data.items[0].volumeInfo.imageLinks == undefined)
+  if(arrayDeResposta.data.volumeInfo.imageLinks == undefined)
   {
     imagemdolivro = null
   }
   else
   {
-    imagemdolivro= arrayDeResposta.data.items[0].volumeInfo.imageLinks.thumbnail
+    imagemdolivro= arrayDeResposta.data.volumeInfo.imageLinks.thumbnail
   }
 
   let livroatt = {idLivro:iddoLivro,situacaoDoLivro:req.body.select,img:imagemdolivro}
 
-  let objetodousuario =  await UserModel.find({_id:valordoid})
+  objetodousuario =  await UserModel.find({_id:valordoid})
   let arrayDeLivrosDoUsario = objetodousuario[0].livros;
   arrayDeLivrosDoUsario[valorDaPosicao] = livroatt
  // console.log(arrayDeLivrosDoUsario)
@@ -466,7 +472,7 @@ router.get('/DashBord/:id/MinhaLeitura/', async(req, res, next) => {
    porcentagem =  ((numerolido * 100)/numeropaginas).toFixed(1)
    }
    else{
-    porcentagem = 30
+    porcentagem = 0
    }
   }
   else
@@ -506,7 +512,7 @@ router.get('/DashBord/:id/MeuLivro/:index', async(req, res, next) => {
   let valordoid = req.params.id
   let indexDoLivro = req.params.index
   objetodousuario =  await UserModel.find({_id:valordoid})
-  console.log(objetodousuario)
+  //console.log(objetodousuario)
  let nome = objetodousuario[0].name
 
  // nome do livro
@@ -516,8 +522,12 @@ router.get('/DashBord/:id/MeuLivro/:index', async(req, res, next) => {
  let numerodepaginaslida = 0;
 // quantidade de paginas lidas
  for (let index = 0; index < objetodousuario[0].log.length; index++) {
-     if(objetodousuario[0].log[index].iddoLivro == valordoid)
+  console.log(objetodousuario[0].log[index].iddoLivro)
+  console.log(objetodousuario[0].livros[indexDoLivro].idLivro)
+
+     if(objetodousuario[0].log[index].iddoLivro == objetodousuario[0].livros[indexDoLivro].idLivro)
      {
+      console.log(objetodousuario[0].log[index].paginas)
       numerodepaginaslida += objetodousuario[0].log[index].paginas
      }
   }
@@ -537,14 +547,15 @@ router.get('/DashBord/:id/MeuLivro/:index', async(req, res, next) => {
           situacaoModificada = 'Erro'
       break;
    }
- 
+ let numero_de_paginas = parseInt(numerodepaginaslida,10);
+ console.log(indexDoLivro)
 
-  res.render(__dirname+'/views/MeuLivro.ejs',{usuarioID:valordoid,NomeDoUsuario:nome,img:objetodousuario[0].livros[indexDoLivro].img,NomeDoLivro:nomeDoLivro,Situacao:situacaoModificada,Paginas:numerodepaginaslida})
+  res.render(__dirname+'/views/MeuLivro.ejs',{usuarioID:valordoid,NomeDoUsuario:nome,img:objetodousuario[0].livros[indexDoLivro].img,NomeDoLivro:nomeDoLivro,Situacao:situacaoModificada,Paginas:numero_de_paginas,livroId:objetodousuario[0].livros[indexDoLivro].idLivro,indexDoLivro:indexDoLivro})
 });
 
 
 
-router.get('/DashBord/:id/AlterarUsuario', async(req, res, next) => {
+router.get('/DashBord/:id/AlterarUsuario/', async(req, res, next) => {
   let valordoid = req.params.id
   objetodousuario =  await UserModel.find({_id:valordoid})
   console.log(objetodousuario)
@@ -572,36 +583,40 @@ console.log(objetoAlterado)
 
 
 
-router.get('/DashBord/:id/AdicionarRotina', async(req, res, next) => {
-  let valordoid = req.params.id
-  objetodousuario =  await UserModel.find({_id:valordoid})
-  let email = objetodousuario[0].email
-  let nome = objetodousuario[0].name
-  let livros = objetodousuario[0].livros
-  //console.log(livros)
-  //array dos nomes dos livros
-  let arraydosnomesdoslivros = []
-  for (let index = 0; index < livros.length; index++) {
-    let pegando_livro_pelo_id = `https://www.googleapis.com/books/v1/volumes/${livros[index].idLivro}?key=AIzaSyB0tE_alkPXEnuRdhd3PtaUwiFFEISIsSI`
-    let arrayDeResposta = await axios.get(pegando_livro_pelo_id);
-    console.log(arrayDeResposta)
-    arraydosnomesdoslivros[index] = arrayDeResposta.data.volumeInfo.title
-  }
-  res.render(__dirname+'/views/adicionarRotina.ejs',{infolivro:arraydosnomesdoslivros})
+router.get('/DashBord/:id/AdicionarRotina/:idDoLivro', async(req, res, next) => {
+   let valordoid = req.params.id
+   let iddolivro = req.params.idDoLivro
+   objetodousuario =  await UserModel.find({_id:valordoid})
+  // let email = objetodousuario[0].email
+   let nome = objetodousuario[0].name
+   let nomenomedoLivro = ""
+  // let livros = objetodousuario[0].livros
+  // //console.log(livros)
+  // //array dos nomes dos livros
+  // let arraydosnomesdoslivros = []
+  // for (let index = 0; index < livros.length; index++) {
+     let pegando_livro_pelo_id = `https://www.googleapis.com/books/v1/volumes/${iddolivro}?key=AIzaSyB0tE_alkPXEnuRdhd3PtaUwiFFEISIsSI`
+     let arrayDeResposta = await axios.get(pegando_livro_pelo_id);
+     console.log('')
+      nomedoLivro = arrayDeResposta.data.volumeInfo.title
+  // }
+   res.render(__dirname+'/views/adicionarRotina.ejs',{NomeDoLivro:nomedoLivro,NomeDoUsuario:nome,usuarioID:valordoid})
 });
 
 
-router.post('/DashBord/:id/AdicionarRotina', async(req, res, next) => {
-  let valordoid = req.params.id
-  objetodousuario =  await UserModel.find({_id:valordoid})
-  let log = objetodousuario[0].log
+router.post('/DashBord/:id/AdicionarRotina/:idDoLivro', async(req, res, next) => {
+   let valordoid = req.params.id
+   let iddoLivro = req.params.idDoLivro
+   objetodousuario =  await UserModel.find({_id:valordoid})
+   let log = objetodousuario[0].log
 
-  let apigoogleBook = `https://www.googleapis.com/books/v1/volumes?q=${req.body.select}&key=AIzaSyB0tE_alkPXEnuRdhd3PtaUwiFFEISIsSI`
+  let apigoogleBook = `https://www.googleapis.com/books/v1/volumes?q=${iddoLivro}&key=AIzaSyB0tE_alkPXEnuRdhd3PtaUwiFFEISIsSI`
   let arrayDeResposta = await axios.get(apigoogleBook);
-  let iddoLivro = arrayDeResposta.data.items[0].id
+  console.log(arrayDeResposta.data.items[0].volumeInfo.title)
+  let nome = arrayDeResposta.data.items[0].volumeInfo.title
 
-  let objetodelog ={iddoLivro:iddoLivro,livro:req.body.select,data:req.body.data,paginas:req.body.paginas}
-  log.push(objetodelog)
+   let objetodelog ={iddoLivro:iddoLivro,livro:nome,data:req.body.data ,paginas:req.body.paginas}
+   log.push(objetodelog)
 
   await UserModel.findOneAndUpdate({
     _id: valordoid
@@ -613,6 +628,10 @@ router.post('/DashBord/:id/AdicionarRotina', async(req, res, next) => {
         new: true // retorna o novo objeto
     })
     res.redirect(`/DashBord/${valordoid}`)
+  
+  
+  
+  
   });
 
   router.get('/:id/payment',async(req, res, next) =>{
