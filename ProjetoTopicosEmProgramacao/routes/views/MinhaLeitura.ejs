@@ -41,11 +41,11 @@
             <div class="DashBordMinhaPesquisa">
                 <table>
                     <form method="POST">
-                        <div class="containerlivro">
                             <!-- aqui tenta fazer uma div com estilização-->
                             <% if(infolivro !=[]) { %>
                                 <% for(let i=0;i < (infolivro.length);i++ ) { %>
-                                    < name=<%=i%>>
+                                    <div class="containerlivro" style="cursor: pointer;" onclick="location.href = '/DashBord/<%= usuarioID%>/MeuLivro/<%= i%>'">
+
                                         <div class="imagemlivro">
                                             <img src=<%=infolivro[i].img %>/>
                                         </div>
@@ -58,11 +58,15 @@
                                         <p>
                                             <%= infolivro[i].situacao %>
                                         </p>
+                                    </div>
                                     <% } %>
                                             <% }else{ %>
+                                                <div class="containerlivro">
                                                 <h1>Nenhum Livro Cadastrado</h1>
+                                                 </div>
+
                                                 <% } %>
-                        </div>
+                       
                     </form>
                 </table>
             </div>

@@ -444,11 +444,26 @@ router.get('/DashBord/:id/MinhaLeitura/', async(req, res, next) => {
 
 
  
-  let numerolido = 0;
+  
 
   //pegando o nome do livro com base no id
 
+
+
+  // for (let index = 0; index < objetodousuario[0].log.length; index++) {
+  //   console.log(objetodousuario[0].log[index].iddoLivro)
+  //   console.log(objetodousuario[0].livros[indexDoLivro].idLivro)
+  
+  //      if(objetodousuario[0].log[index].iddoLivro == objetodousuario[0].livros[indexDoLivro].idLivro)
+  //      {
+  //       console.log(objetodousuario[0].log[index].paginas)
+  //       numerodepaginaslida += objetodousuario[0].log[index].paginas
+  //      }
+  //   }
+
   for (let index = 0; index < arryLivros.length; index++) {
+
+    let numerolido = 0;
 
     for (let j = 0; j < objetodousuario[0].log.length; j++) {
 
