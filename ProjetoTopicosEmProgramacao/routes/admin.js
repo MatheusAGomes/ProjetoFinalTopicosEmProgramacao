@@ -164,9 +164,86 @@ router.get('/DashBord/:id', async(req, res, next) => {
   } catch (error) {
     
   }
+  // Ultimo livro
+
+  let index_ultimo_log = objetodousuario[0].log.length - 1;
+  let id_do_ultimo_livro = objetodousuario[0].log[index_ultimo_log].iddoLivro;
+  let index_do_ultimo_livro;
+
+  for (let index = 0; index < objetodousuario[0].livros.length; index++) {
+
+            if (objetodousuario[0].livros[index].idLivro == id_do_ultimo_livro) {
+              index_do_ultimo_livro = index
+            }
+    
+  }
+
+  //nome ultimo livro
+  let nomeUltimoLivro = objetodousuario[0].log[index_ultimo_log].livro
+
+  //situacao do ultimo livro
+  let situacaoModificada;
+
+  switch (objetodousuario[0].livros[index_do_ultimo_livro].situacaoDoLivro) {
+    case 'valor1':
+      situacaoModificada = 'Lendo'
+      break;
+    case 'valor2':
+        situacaoModificada = 'Lido'
+        break;
+    case 'valor3':
+          situacaoModificada = 'Quero Ler'
+          break;
+    default:
+          situacaoModificada = 'Erro'
+      break;
+   }
+
+  // imagem ultimo livro
+   let imagem_ultimo_Livro = objetodousuario[0].livros[index_do_ultimo_livro].img
+  
+  // porcentagem ultimo livro
+          let numerodepags = 0;
+          for (let index = 0; index < objetodousuario[0].log.length; index++) {
+            console.log(id_do_ultimo_livro)
+            console.log(objetodousuario[0].log[index].iddoLivro)
+
+              if(id_do_ultimo_livro == objetodousuario[0].log[index].iddoLivro)
+              {
+                numerodepags += parseInt(objetodousuario[0].log[index].paginas,10)
+              }
+            
+          }
+          //console.log(numerodepags)
+
+
+
+
+          let pegando_livro_pelo_id = `https://www.googleapis.com/books/v1/volumes/${id_do_ultimo_livro}?key=AIzaSyB0tE_alkPXEnuRdhd3PtaUwiFFEISIsSI`
+          let arrayDeResposta = await axios.get(pegando_livro_pelo_id);
+        // console.log(arrayDeResposta)
+        //arryLiarrayDeRespostavros
+        
+        if(situacaoModificada != 'valor2')
+        {
+        if (numerodepags != 0) {
+          let numeropaginas = arrayDeResposta.data.volumeInfo.pageCount
+          //let description =  arrayDeResposta.data.volumeInfo.description
+        //  = parseInt(arryLivros[index].numeroDePaginasLivro,10)
+        porcentagem =  ((numerodepags * 100)/numeropaginas).toFixed(1)
+        }
+        else{
+          porcentagem = 0
+        }
+        }
+        else
+        {
+          porcentagem = 100
+        }
+
   
 
-  res.render(__dirname+'/views/DashBord.ejs',{NomeDoUsuario:objetodousuario[0].name,quantidadedepaginas:quantidadedepaginas,quantidadedelivros:quantidadedeLivros,usuarioID:valordoid})
+  res.render(__dirname+'/views/DashBord.ejs',{NomeDoUsuario:objetodousuario[0].name,quantidadedepaginas:quantidadedepaginas,quantidadedelivros:quantidadedeLivros,usuarioID:valordoid,imgUltimoLivro:imagem_ultimo_Livro,NomeDoUltimoLivro:nomeUltimoLivro,StatusDoUltimoLivro:situacaoModificada,PorcentagemUltimoLivro:porcentagem})
 });
 
 
