@@ -241,9 +241,10 @@ router.get('/DashBord/:id', async(req, res, next) => {
           porcentagem = 100
         }
 
-  
+        let log = objetodousuario[0].log;
+        console.log(log)
 
-  res.render(__dirname+'/views/DashBord.ejs',{NomeDoUsuario:objetodousuario[0].name,quantidadedepaginas:quantidadedepaginas,quantidadedelivros:quantidadedeLivros,usuarioID:valordoid,imgUltimoLivro:imagem_ultimo_Livro,NomeDoUltimoLivro:nomeUltimoLivro,StatusDoUltimoLivro:situacaoModificada,PorcentagemUltimoLivro:porcentagem})
+  res.render(__dirname+'/views/DashBord.ejs',{NomeDoUsuario:objetodousuario[0].name,quantidadedepaginas:quantidadedepaginas,quantidadedelivros:quantidadedeLivros,usuarioID:valordoid,imgUltimoLivro:imagem_ultimo_Livro,NomeDoUltimoLivro:nomeUltimoLivro,StatusDoUltimoLivro:situacaoModificada,PorcentagemUltimoLivro:porcentagem,Log:log})
 });
 
 

@@ -9,6 +9,15 @@
     </script>
     <link href="stylesheet" href="/public/css/reset.css ">
     <link rel="stylesheet" href="/public/css/DashBord.css">
+    <style>
+        table,th,td{
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        table{
+            background-color: blue;
+        }
+    </style>
 
     <title>Resumo</title>
 </head>
@@ -44,7 +53,24 @@
             <div class="idDivResumoDeAtividade">
                 <h1>Resumo de Atividade</h1>
                 <div class="tabela">
-                    <h2></h2>
+                    <table>
+                        <tr>
+                            <th>Livro</th>
+                            <th>Dia</th>
+                            <th>Pagina</th>
+                        </tr>
+
+                        <% for(let i=0;i < 5;i++ ) { %>
+                            <%   if(Log[i] != null){ %>
+                            <tr>
+                                <td><%= Log[i].livro %> </td>
+                                <td><%= Log[i].data %></td>
+                                <td><%= Log[i].paginas %></td>
+                            </tr>
+                            <% } %>
+                            <% } %>
+                        
+                    </table>
                 </div>
             </div>
         </div>
