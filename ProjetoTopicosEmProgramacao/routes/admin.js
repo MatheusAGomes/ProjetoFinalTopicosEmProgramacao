@@ -164,8 +164,18 @@ router.get('/DashBord/:id', async(req, res, next) => {
   } catch (error) {
     
   }
-  // Ultimo livro
 
+  
+   
+  let imagem_ultimo_Livro = 'https://www.imagensempng.com.br/wp-content/uploads/2021/02/Ponto-Interrogacao-Png-1024x1024.png'
+  let nomeUltimoLivro = 'Sem Atividade'
+  let situacaoModificada = 'Sem Atividade'
+  let porcentagem = 'Sem Atividade'
+  let log = []
+
+
+  // Ultimo livro
+  try{
   let index_ultimo_log = objetodousuario[0].log.length - 1;
   let id_do_ultimo_livro = objetodousuario[0].log[index_ultimo_log].iddoLivro;
   let index_do_ultimo_livro;
@@ -177,6 +187,8 @@ router.get('/DashBord/:id', async(req, res, next) => {
             }
     
   }
+
+  
 
   //nome ultimo livro
   let nomeUltimoLivro = objetodousuario[0].log[index_ultimo_log].livro
@@ -200,7 +212,8 @@ router.get('/DashBord/:id', async(req, res, next) => {
    }
 
   // imagem ultimo livro
-   let imagem_ultimo_Livro = objetodousuario[0].livros[index_do_ultimo_livro].img
+   
+   imagem_ultimo_Livro = objetodousuario[0].livros[index_do_ultimo_livro].img
   
   // porcentagem ultimo livro
           let numerodepags = 0;
@@ -243,7 +256,9 @@ router.get('/DashBord/:id', async(req, res, next) => {
 
         let log = objetodousuario[0].log;
         console.log(log)
-
+      }catch(error){
+       
+      }
   res.render(__dirname+'/views/DashBord.ejs',{NomeDoUsuario:objetodousuario[0].name,quantidadedepaginas:quantidadedepaginas,quantidadedelivros:quantidadedeLivros,usuarioID:valordoid,imgUltimoLivro:imagem_ultimo_Livro,NomeDoUltimoLivro:nomeUltimoLivro,StatusDoUltimoLivro:situacaoModificada,PorcentagemUltimoLivro:porcentagem,Log:log})
 });
 
