@@ -254,7 +254,7 @@ router.get('/DashBord/:id', async(req, res, next) => {
           porcentagem = 100
         }
 
-        let log = objetodousuario[0].log;
+         log = objetodousuario[0].log;
         console.log(log)
       }catch(error){
        
