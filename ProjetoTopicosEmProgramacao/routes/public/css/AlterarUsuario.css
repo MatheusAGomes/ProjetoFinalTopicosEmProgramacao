@@ -1,0 +1,114 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap');
+
+body {
+    background-color: #1b1f27;
+    font-family: 'Poppins', sans-serif;
+    overflow: hidden;
+}
+
+.area-login {
+    display: flex;
+    height: 110vh;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.login {
+    width: 25%;
+    height: 65%;
+    background-color: #9FB6CD;
+    padding: 35px;
+    border-radius: 30px;
+    align-items: center;
+    border: 3px solid black;
+}
+
+.imagem {
+    margin: auto;
+    display: flex;
+
+}
+
+img {
+    width: 75%;
+    height: 100%;
+    margin: auto;
+}
+
+.login form {
+    display: flex;
+    flex-direction: column;
+}
+
+.login input {
+    margin-top: 10px;
+}
+
+label {
+    margin: 5px;
+    font-size: 20px;
+    font-family: 'Poppins', sans-serif;
+
+}
+
+input[type=text] {
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: 15px;
+    font-family: 'Poppins', sans-serif;
+}
+
+input[type=password] {
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: 15px;
+    font-family: 'Poppins', sans-serif;
+}
+
+input[type=button] {
+    background-color: #27408B;
+    border: 2px solid black;
+    color: white;
+    padding: 16px 32px;
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: 20px;
+    font-family: 'Poppins', sans-serif;
+    width: 100%;
+    font-size: 15px;
+}
+
+input[type=submit] {
+    background-color: #27408B;
+    border: 2px solid black;
+    color: white;
+    padding: 16px 32px;
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: 20px;
+    font-family: 'Poppins', sans-serif;
+    width: 100%;
+    font-size: 15px;
+}
+
+input[type=button]:hover{
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+    background-color: #3A5FCD;
+    border-bottom: 4px solid black;
+}
+
+input[type=submit]:hover {
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+    background-color: #3A5FCD;
+    border-bottom: 4px solid black;
+}
+
+.botoes {
+    flex-direction: column;
+}
+
+p {
+    padding: 10px;
+    text-align: center;
+}

@@ -1,26 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script></script>
-    <title>Criando Conta</title>
-</head>
-<body>
+    <link href="stylesheet" href="/public/css/reset.css ">
+    <link rel="stylesheet" href="/public/css/CadastroDeLivro.css">
 
-    <form method="POST">
-            <h1>READING...</h1>
-            <label>NomeDoLivro</label>
-            <input type="text" name="userNomeDoLivro">
-            <label>Situacação</label>
-            <select name="select">
-                <option value="valor1"selected>Lendo</option>
-                <option value="valor2">Lido</option>
-                <option value="valor3">Quero Ler</option>
-            </select>
-            <input type="submit" value="Cadastrar">
-    </form>
-    
+    <title>Cadastrando Livro</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="Menu">
+            <div class="logo">
+                <img src="/public/img/Reading....svg" id="logo">
+            </div>
+            <div class="botoes">
+                <input type="button" value="Resumo" id="btnAcionarResumo">
+                <input type="button" value="Minhas Leituras" id="btnAcionarMinhasLeituras">
+                <input type="button" value="Pesquisar Livros" id="btnAcionarPesquisaDeLivros">
+                <input type="button" value="Meu Perfil" id="btnMeuPerfil">
+                <input type="button" value="Logout" id="btnLogout">
+            </div>
+            <h1 id="nomeusuario">Nome Do Usuário</h1>
+        </div>
+
+        <div class="direita">
+            <div class="titulo">
+                <h1>Cadastrar Livro</h1>
+            </div>
+            <div class="cadastro">
+                <form method="POST">
+                    <div class="fundocadastro">
+                    <div class="nomelivro">
+                        <label>Nome Do Livro:</label>
+                        <input type="text" name="userNomeDoLivro">
+                    </div>
+                    <div class="situacao">
+                        <label>Status:</label>
+                        <select name="select">
+                            <option value="valor1" selected>Lendo</option>
+                            <option value="valor2">Lido</option>
+                            <option value="valor3">Quero Ler</option>
+                        </select>
+                    </div>
+                    <div class="submitcadastro">
+                        <input type="submit" value="Cadastrar">
+                    </div>
+                </form>
+            </div>
+            </div>
+        </div>
 </body>
+
 </html>

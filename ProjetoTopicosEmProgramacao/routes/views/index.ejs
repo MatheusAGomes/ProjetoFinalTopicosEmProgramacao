@@ -5,32 +5,30 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="stylesheet" href="/public/css/reset.css">
+    <link href="stylesheet" href="/public/css/reset.css ">
     <link rel="stylesheet" href="/public/css/index.css">
-    <script src="/public/scripts/index.js" defer></script>
     <title>Login</title>
 </head>
 
 <body>
-<section class="area-login">
-    <div class="login">
-        <div class="imagem">
-            <img src="/public/img/Reading....svg">
-        </div>
+    <section class="area-login">
+        <div class="login">
+            <div class="imagem">
+                <img src="public/img/Reading....svg ">
+            </div>
 
-        <form action="/" method="POST">
-            <label>Usuário:</label>
-            <input type="text" placeholder="Usuário" name="userText">
-            <label>Senha:</label>
-            <input type="password" placeholder="Senha" name="senhaText">
-            <div class="botoes">
-                <input type="button" value="Criar Conta" id="btnCria" onclick="location.href= '/NovoUsuario'">
-                <input type="submit" id="btnLogar" value="Logar"/>
-        </form>
-        <p>Esqueceu a senha? <a href="">Recuperar</a></p>
-    </div>
-</section>
-</main>
+            <form action="/" method="POST">
+                <label>Usuário:</label>
+                <input type="text" name="userText">
+                <label>Senha:</label>
+                <input type="password" name="senhaText">
+                <div class="botoes">
+                    <input type="button" value="Criar Conta" id="btnCria" onclick="location.href= '/NovoUsuario'">
+                    <input type="submit" id="btnLogar" value="Logar" />
+            </form>
+            <p>Esqueceu a senha? <a href="">Recuperar</a></p>
+        </div>
+    </section>
 </body>
 
 </html>
