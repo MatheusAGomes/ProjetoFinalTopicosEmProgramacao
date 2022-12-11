@@ -466,7 +466,7 @@ router.get('/DashBord/:id/MinhaLeitura/', async(req, res, next) => {
    porcentagem =  ((numerolido * 100)/numeropaginas).toFixed(1)
    }
    else{
-    porcentagem = 0
+    porcentagem = 30
    }
   }
   else
@@ -509,7 +509,37 @@ router.get('/DashBord/:id/MeuLivro/:index', async(req, res, next) => {
   console.log(objetodousuario)
  let nome = objetodousuario[0].name
 
-  res.render(__dirname+'/views/MeuLivro.ejs',{NomeDoUsuario:nome,img:objetodousuario[0].livros[indexDoLivro].img,NomeDoLivro:null,Situacao:objetodousuario[0].livros[indexDoLivro].situacaoDoLivro,Paginas:null})
+ // nome do livro
+ let pegando_livro_pelo_id = `https://www.googleapis.com/books/v1/volumes/${objetodousuario[0].livros[indexDoLivro].idLivro}?key=AIzaSyB0tE_alkPXEnuRdhd3PtaUwiFFEISIsSI`
+ let arrayDeResposta = await axios.get(pegando_livro_pelo_id);
+ let nomeDoLivro = arrayDeResposta.data.volumeInfo.title
+ let numerodepaginaslida = 0;
+// quantidade de paginas lidas
+ for (let index = 0; index < objetodousuario[0].log.length; index++) {
+     if(objetodousuario[0].log[index].iddoLivro == valordoid)
+     {
+      numerodepaginaslida += objetodousuario[0].log[index].paginas
+     }
+  }
+
+  let situacaoModificada ;
+   switch (objetodousuario[0].livros[indexDoLivro].situacaoDoLivro) {
+    case 'valor1':
+      situacaoModificada = 'Lendo'
+      break;
+    case 'valor2':
+        situacaoModificada = 'Lido'
+        break;
+    case 'valor3':
+          situacaoModificada = 'Quero Ler'
+          break;
+    default:
+          situacaoModificada = 'Erro'
+      break;
+   }
+ 
+
+  res.render(__dirname+'/views/MeuLivro.ejs',{usuarioID:valordoid,NomeDoUsuario:nome,img:objetodousuario[0].livros[indexDoLivro].img,NomeDoLivro:nomeDoLivro,Situacao:situacaoModificada,Paginas:numerodepaginaslida})
 });
 
 
