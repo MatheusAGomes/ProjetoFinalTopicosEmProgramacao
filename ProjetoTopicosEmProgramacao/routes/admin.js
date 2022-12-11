@@ -104,7 +104,7 @@ router.post('/NovoUsuario', async (req, res, next) => {
         email: req.body.userEmail,
         senha: hashedPwd,
         name: req.body.userNome,
-        tipo: "gratuito",
+        statusPag:false,
     })
 
     res.redirect(`/${newUser._id.toString()}/payment`);

@@ -10,7 +10,7 @@ const UserSchema = new Schema({
     name:String,
     livros:[],
     log:[],
-    statusPag:false,
+    statusPag:Boolean,
 });
 
 const UserModel = mongoose.model('users',UserSchema);
