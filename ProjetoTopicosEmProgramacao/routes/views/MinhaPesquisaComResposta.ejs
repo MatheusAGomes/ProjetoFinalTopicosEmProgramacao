@@ -23,10 +23,10 @@
                 <input type="button" value="Resumo" id="btnAcionarResumo" onclick="location.href = '/DashBord/<%= usuarioID%>'">
                 <input type="button" value="Minhas Leituras" id="btnAcionarMinhasLeituras" onclick="location.href = '/DashBord/<%= usuarioID%>/MinhaLeitura'">
                 <input type="button" value="Pesquisar Livros" id="btnAcionarPesquisaDeLivros" onclick="location.href = '/MinhaPesquisaComResposta/<%= usuarioID%>/book/'">
-                <input type="button" value="Meu Perfil" id="btnMeuPerfil">
+                <input type="button" value="Meu Perfil" id="btnMeuPerfil" onclick="location.href = '/DashBord/<%= usuarioID%>/AlterarUsuario/'">
                 <input type="button" value="Logout" id="btnLogout">
             </div>
-            <h1 id="nomeusuario">Nome Do Usuário</h1>
+            <h1 id="nomeusuario"><%= NomeDoUsuario%></h1>
         </div>
         <div class="main">
             <h1>Pesquisar Livros</h1>

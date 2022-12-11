@@ -4,12 +4,21 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Pagamento</title>
   <script src="https://www.paypal.com/sdk/js?client-id=<%= clientID %>&currency=BRL"></script>
   <script src="/public/scripts/payment.js" defer></script>
+  <link href="stylesheet" href="/public/css/payment.css ">
 </head>
-<body>
-  <div id="paypal"></div>
-  <h1 id="funciona"> <%=userID%></h1>
+<body style="background-color: #1b1f27;" ></body>
+  
+  <div style=" position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  background: white;
+  border-radius: 10px;border-style: solid;border-color: black;" id="paypal"><h3 style="text-align: center; font-family: 'Poppins', sans-serif">Pagamento</h3></div>
+  <h1 style="visibility: hidden;" id="funciona"> <%=userID%></h1>
+
 </body>
 </html>

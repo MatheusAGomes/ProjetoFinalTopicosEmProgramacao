@@ -59,6 +59,13 @@ input[type=text] {
     font-family: 'Poppins', sans-serif;
 }
 
+input[type=password] {
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: 15px;
+    font-family: 'Poppins', sans-serif;
+}
+
 input[type=button] {
     background-color: #27408B;
     border: 2px solid black;

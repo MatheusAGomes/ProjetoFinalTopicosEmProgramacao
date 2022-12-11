@@ -24,8 +24,8 @@
                 <input type="button" value="Resumo" id="btnAcionarResumo" onclick="location.href = '/DashBord/<%= usuarioID%>'">
                 <input type="button" value="Minhas Leituras" id="btnAcionarMinhasLeituras" onclick="location.href = '/DashBord/<%= usuarioID%>/MinhaLeitura'">
                 <input type="button" value="Pesquisar Livros" id="btnAcionarPesquisaDeLivros" onclick="location.href = '/MinhaPesquisaComResposta/<%= usuarioID%>/book/'">
-                <input type="button" value="Meu Perfil" id="btnMeuPerfil">
-                <input type="button" value="Logout" id="btnLogout">
+                <input type="button" value="Meu Perfil" id="btnMeuPerfil" onclick="location.href = '/DashBord/<%= usuarioID%>/AlterarUsuario/'">
+                <input type="button" value="Logout" id="btnLogout" onclick="location.href = '/'">
             </div>
             <h1 id="nomeusuario"><%= NomeDoUsuario%></h1>
         </div>
@@ -35,8 +35,7 @@
                 <h1>Minhas Leituras</h1>
             </div>
             <div class="botaoadd">
-                <input type="button" value="Adicionar Livro" id="btnAddLivro">
-                <input type="button" value="Alterar Livro" id="btnAltLivro">
+                <input type="button" value="Adicionar Livro" id="btnAddLivro" onclick="location.href = `/DashBord/<%= usuarioID%>/CadastroDeLivro`">
             </div>
             <div class="DashBordMinhaPesquisa">
                 <table>
