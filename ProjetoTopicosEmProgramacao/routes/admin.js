@@ -489,7 +489,7 @@ router.get('/DashBord/:id/AlterarLivro/:posicaodolivro', async(req, res, next) =
 
   
   
-  res.render(__dirname+"/views/AlterarLivro.ejs",{NomeDoUsuario:objetodousuario[0].name,NomeDoLivro:nomeDoLivro})
+  res.render(__dirname+"/views/AlterarLivro.ejs",{NomeDoUsuario:objetodousuario[0].name,NomeDoLivro:nomeDoLivro,usuarioID: valordoid})
 });
 
 
@@ -642,7 +642,7 @@ router.get('/DashBord/:id/MeuLivro/:index', async(req, res, next) => {
   let valordoid = req.params.id
   let indexDoLivro = req.params.index
   objetodousuario =  await UserModel.find({_id:valordoid})
-  //console.log(objetodousuario)
+  //console.log(objetodousuario) 
  let nome = objetodousuario[0].name
 
  // nome do livro
