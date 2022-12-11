@@ -502,6 +502,17 @@ router.get('/DashBord/:id/MinhaLeitura/', async(req, res, next) => {
 });
 
 
+router.get('/DashBord/:id/MeuLivro/:index', async(req, res, next) => {
+  let valordoid = req.params.id
+  let indexDoLivro = req.params.index
+  objetodousuario =  await UserModel.find({_id:valordoid})
+  console.log(objetodousuario)
+ let nome = objetodousuario[0].name
+
+  res.render(__dirname+'/views/MeuLivro.ejs',{NomeDoUsuario:nome,img:objetodousuario[0].livros[indexDoLivro].img,NomeDoLivro:null,Situacao:objetodousuario[0].livros[indexDoLivro].situacaoDoLivro,Paginas:null})
+});
+
+
 
 router.get('/DashBord/:id/AlterarUsuario', async(req, res, next) => {
   let valordoid = req.params.id

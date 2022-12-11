@@ -25,7 +25,8 @@
                     <!-- aqui tenta fazer uma div com estilização-->
                     <% if(infolivro != []) { %>
                     <% for(let i=0;i < (infolivro.length);i++ ) { %>
-                        <div>
+                        <!--/DashBord/:id/MeuLivro/:index-->
+                        <div style="cursor: pointer;" onclick="location.href = '/DashBord/<%= usuarioID%>/MeuLivro/<%= i%>'">
                         <img src=<%= infolivro[i].img %>/>
                         <h1><%= infolivro[i].nome %></h1>
                         <h1><%= infolivro[i].porcentagem %> %</h1>
