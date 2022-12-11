@@ -120,6 +120,9 @@ body {
   width: 100%;
   padding-left: 10px;
   font-family: 'Poppins', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
 }
 

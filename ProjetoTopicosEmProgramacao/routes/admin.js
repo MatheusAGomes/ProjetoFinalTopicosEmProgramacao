@@ -150,15 +150,15 @@ DASHBORD
 router.get('/DashBord/:id', async(req, res, next) => {
   let valordoid = req.params.id
   let quantidadedepaginas = 0;
-  let quantidadedeLivros = 0;
+  
   
   let objetodousuario =  await UserModel.find({_id:valordoid})
   let nome = objetodousuario[0].name;
   //pegando o numero de paginas lidas
   
-  
+  let arrayDeLivrosDoUsario = objetodousuario[0].log
   try {
-    let arrayDeLivrosDoUsario = objetodousuario[0].log
+    
 //
     for (let index = 0; index < arrayDeLivrosDoUsario.length; index++) {
       quantidadedepaginas +=  parseInt(arrayDeLivrosDoUsario[index].paginas, 10);
@@ -167,7 +167,7 @@ router.get('/DashBord/:id', async(req, res, next) => {
   } catch (error) {
     
   }
-
+  let quantidadedeLivros = 0;
   // numero de livros setados como lido
   try {
     for (let index = 0; index < arrayDeLivrosDoUsario.length; index++) {
@@ -414,8 +414,9 @@ router.get('/DashBord/:id/CadastroDeLivro', async(req, res, next) => {
   let valordoid = req.params.id
   let teste;
   objetodousuario =  await UserModel.find({_id:valordoid})
-  res.render(__dirname+"/views/CadastroDeLivro.ejs")
+  res.render(__dirname+"/views/CadastroDeLivro.ejs",{usuarioID:valordoid})
 });
+
 router.post('/DashBord/:id/CadastroDeLivro', async(req, res, next) => {
   let valordoid = req.params.id
   
@@ -658,7 +659,7 @@ router.get('/DashBord/:id/MeuLivro/:index', async(req, res, next) => {
      if(objetodousuario[0].log[index].iddoLivro == objetodousuario[0].livros[indexDoLivro].idLivro)
      {
       console.log(objetodousuario[0].log[index].paginas)
-      numerodepaginaslida += objetodousuario[0].log[index].paginas
+      numerodepaginaslida += parseInt(objetodousuario[0].log[index].paginas,10)
      }
   }
 
@@ -732,7 +733,7 @@ router.get('/DashBord/:id/AdicionarRotina/:idDoLivro', async(req, res, next) => 
      console.log('')
       nomedoLivro = arrayDeResposta.data.volumeInfo.title
   // }
-   res.render(__dirname+'/views/adicionarRotina.ejs',{NomeDoLivro:nomedoLivro,NomeDoUsuario:nome,usuarioID:valordoid})
+   res.render(__dirname+'/views/adicionarRotina.ejs',{NomeDoUsuario:nome,NomeDoLivro:nomedoLivro,NomeDoUsuario:nome,usuarioID:valordoid})
 });
 
 
