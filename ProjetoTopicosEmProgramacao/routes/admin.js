@@ -1,4 +1,8 @@
 require('dotenv').config()
+let alert = require('alert'); 
+
+
+
 
 const express = require('express'),
     router = express(),
@@ -63,11 +67,15 @@ router.post('/', async (req, res, next) => {
               return res.redirect(`DashBord/${user._id.toString()}`) 
             }
         } else {
-            console.log("Wrong username or password.")
+            alert("email ou senha incorretos")
+             
+         
             return
         }
     } else {
         console.log("Wrong username or password.")
+        alert("email ou senha incorretos")
+
         return
     }
 });
@@ -90,11 +98,15 @@ router.get('/NovoUsuario', (req, res, next) => {
 router.post('/NovoUsuario', async (req, res, next) => {
     if (req.body.userSenha !== req.body.userConfirmeSenha) {
         console.log('different passwords')
+        alert("Senha e campo de confirmação nao condizem")
         return res.redirect('/NovoUsuario')
+
     }
     const user = await UserModel.findOne({email: req.body.userEmail})
     if (user) {
         console.log('existing email')
+        alert("Email já existente na plataforma, tente logar ou utilizar ou email.")
+
         return res.redirect('/NovoUsuario')
     }
     //hash the password
@@ -444,6 +456,7 @@ router.post('/DashBord/:id/CadastroDeLivro', async(req, res, next) => {
 }, {
     new: true // retorna o novo objeto
 })
+alert("Livro cadastrado com sucesso !")
 
 return  res.redirect(`/DashBord/${valordoid}`)
 });
@@ -517,6 +530,7 @@ router.post('/DashBord/:id/AlterarLivro/:posicaodolivro', async(req, res, next) 
     new: true // retorna o novo objeto
 })
   
+alert("Livro alterado com sucesso !")
 
   
   res.redirect(`/DashBord/${valordoid}/MinhaLeitura/`)
@@ -686,6 +700,8 @@ console.log(objetoAlterado)
  await UserModel.findOneAndUpdate({_id: valordoid },objetoAlterado, {
   new: true // retorna o novo objeto
 })
+      alert("Usuario alterado com sucesso !")
+
       res.redirect(`/DashBord/${valordoid}`)
 });
 
@@ -735,6 +751,9 @@ router.post('/DashBord/:id/AdicionarRotina/:idDoLivro', async(req, res, next) =>
     }, {
         new: true // retorna o novo objeto
     })
+
+    alert("Rotina cadastrado com sucesso !")
+
     res.redirect(`/DashBord/${valordoid}`)
   
   
