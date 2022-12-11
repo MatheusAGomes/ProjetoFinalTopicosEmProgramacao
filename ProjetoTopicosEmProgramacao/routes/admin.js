@@ -347,6 +347,7 @@ router.get(['/MinhaPesquisaComResposta/:id/book/','/MinhaPesquisaComResposta/:id
   let description = ""
   let numeroDePaginasLivro = ""
   let id = req.params.id;
+  let img = ""
   try {
   console.log(req.params.id)
   console.log(req.params.idbook)
@@ -368,7 +369,8 @@ router.get(['/MinhaPesquisaComResposta/:id/book/','/MinhaPesquisaComResposta/:id
   autor = arrayDeResposta.data.volumeInfo.authors[0]
   description = arrayDeResposta.data.volumeInfo.description
   numeroDePaginasLivro = arrayDeResposta.data.volumeInfo.pageCount;
-  return res.render(__dirname+"/views/MinhaPesquisaComResposta.ejs",{NomeDoUsuario:nomedoUsuario,NomeDoLivro:titulo,Autor:autor,description:description,quantidadedePaginas:numeroDePaginasLivro,usuarioID:id})
+  img = arrayDeResposta.data.volumeInfo.imageLinks.thumbnail
+  return res.render(__dirname+"/views/MinhaPesquisaComResposta.ejs",{NomeDoUsuario:nomedoUsuario,NomeDoLivro:titulo,Autor:autor,description:description,quantidadedePaginas:numeroDePaginasLivro,usuarioID:id,img:img})
   
 } catch (error) {
   
@@ -377,7 +379,7 @@ router.get(['/MinhaPesquisaComResposta/:id/book/','/MinhaPesquisaComResposta/:id
 
 
 
-res.render(__dirname+"/views/MinhaPesquisaComResposta.ejs",{NomeDoUsuario:nomedoUsuario,NomeDoLivro:titulo,Autor:autor,description:description,quantidadedePaginas:numeroDePaginasLivro,usuarioID:id})
+res.render(__dirname+"/views/MinhaPesquisaComResposta.ejs",{NomeDoUsuario:nomedoUsuario,NomeDoLivro:titulo,Autor:autor,description:description,quantidadedePaginas:numeroDePaginasLivro,usuarioID:id,img:null})
 
 });
 
