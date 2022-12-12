@@ -1,5 +1,4 @@
 require('dotenv').config()
-const session = require('express-session')
 const express = require('express'),
     router = express(),
     Loaders = require('../startdb.js'),
@@ -11,10 +10,7 @@ const express = require('express'),
 
 const saltRounds = 10
 
-router.use(session({
-    secret: 'secret-key',
-    saveUninitialized: false,
-}))
+
 
 router.set('view engine', 'ejs')
 router.use('/public', express.static(path.resolve(__dirname, 'public')));
