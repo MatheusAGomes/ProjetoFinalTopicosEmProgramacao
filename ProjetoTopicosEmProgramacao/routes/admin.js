@@ -223,7 +223,7 @@ router.get('/DashBord/:id', async (req, res, next) => {
         //console.log(numerodepags)
 
 
-        let pegando_livro_pelo_id = `https://www.googleapis.com/books/v1/volumes/${id_do_ultimo_livro}?key=AIzaSyB0tE_alkPXEnuRdhd3PtaUwiFFEISIsSI`
+        let pegando_livro_pelo_id = `https://www.googleapis.com/books/v1/volumes/${id_do_ultimo_livro}?key=AIzaSyC-jQZM4QE_T68FCX5_CT-TIILDRj0iFTc`
         let arrayDeResposta = await axios.get(pegando_livro_pelo_id);
         // console.log(arrayDeResposta)
         //arryLiarrayDeRespostavros
@@ -335,7 +335,7 @@ router.get(['/MinhaPesquisaComResposta/:id/book/', '/MinhaPesquisaComResposta/:i
         let valordoid = req.params.id
         objetodousuario = await UserModel.find({_id: req.params.id})
 
-        let pegando_livro_pelo_id = `https://www.googleapis.com/books/v1/volumes/${req.params.idbook}?key=AIzaSyB0tE_alkPXEnuRdhd3PtaUwiFFEISIsSI`
+        let pegando_livro_pelo_id = `https://www.googleapis.com/books/v1/volumes/${req.params.idbook}?key=AIzaSyC-jQZM4QE_T68FCX5_CT-TIILDRj0iFTc`
 
         let arrayDeResposta = await axios.get(pegando_livro_pelo_id);
         console.log(arrayDeResposta.data.volumeInfo.title)
@@ -386,7 +386,7 @@ router.post(['/MinhaPesquisaComResposta/:id/book/', '/MinhaPesquisaComResposta/:
     let nomeDoLivro = req.body.NomeDoLivro.trim()
     console.log(nomeDoLivro)
 
-    let apigoogleBook = `https://www.googleapis.com/books/v1/volumes?q=${nomeDoLivro}&key=AIzaSyB0tE_alkPXEnuRdhd3PtaUwiFFEISIsSI`
+    let apigoogleBook = `https://www.googleapis.com/books/v1/volumes?q=${nomeDoLivro}&key=AIzaSyC-jQZM4QE_T68FCX5_CT-TIILDRj0iFTc`
 
 
     let arrayDeResposta = await axios.get(apigoogleBook);
@@ -417,7 +417,7 @@ router.post('/DashBord/:id/CadastroDeLivro', async (req, res, next) => {
     let nomeDoLivro = req.body.userNomeDoLivro.trim()
     //console.log(nomeDoLivro)
 
-    let apigoogleBook = `https://www.googleapis.com/books/v1/volumes?q=${nomeDoLivro}&key=AIzaSyB0tE_alkPXEnuRdhd3PtaUwiFFEISIsSI`
+    let apigoogleBook = `https://www.googleapis.com/books/v1/volumes?q=${nomeDoLivro}&key=AIzaSyC-jQZM4QE_T68FCX5_CT-TIILDRj0iFTc`
 
 
     let arrayDeResposta = await axios.get(apigoogleBook);
@@ -497,7 +497,7 @@ router.post('/DashBord/:id/AlterarLivro/:posicaodolivro', async (req, res, next)
     //pegando os valores att do livro
     //id: eu tenho o nome do livro colocado
     // let nomedoLivro = req.body.userNomeDoLivro;
-    let pegando_livro_pelo_id = `https://www.googleapis.com/books/v1/volumes/${objetodousuario[0].livros[valorDaPosicao].idLivro}?key=AIzaSyB0tE_alkPXEnuRdhd3PtaUwiFFEISIsSI`
+    let pegando_livro_pelo_id = `https://www.googleapis.com/books/v1/volumes/${objetodousuario[0].livros[valorDaPosicao].idLivro}?key=AIzaSyC-jQZM4QE_T68FCX5_CT-TIILDRj0iFTc`
     let arrayDeResposta = await axios.get(pegando_livro_pelo_id);
     console.log(arrayDeResposta.data)
     let iddoLivro = arrayDeResposta.data.id
@@ -570,7 +570,7 @@ router.get('/DashBord/:id/MinhaLeitura/', async (req, res, next) => {
 
         }
 
-        let pegando_livro_pelo_id = `https://www.googleapis.com/books/v1/volumes/${arryLivros[index].idLivro}?key=AIzaSyB0tE_alkPXEnuRdhd3PtaUwiFFEISIsSI`
+        let pegando_livro_pelo_id = `https://www.googleapis.com/books/v1/volumes/${arryLivros[index].idLivro}?key=AIzaSyC-jQZM4QE_T68FCX5_CT-TIILDRj0iFTc`
         let arrayDeResposta = await axios.get(pegando_livro_pelo_id);
         // console.log(arrayDeResposta)
 
@@ -636,7 +636,7 @@ router.get('/DashBord/:id/MeuLivro/:index', async (req, res, next) => {
     let nome = objetodousuario[0].name
 
     // nome do livro
-    let pegando_livro_pelo_id = `https://www.googleapis.com/books/v1/volumes/${objetodousuario[0].livros[indexDoLivro].idLivro}?key=AIzaSyB0tE_alkPXEnuRdhd3PtaUwiFFEISIsSI`
+    let pegando_livro_pelo_id = `https://www.googleapis.com/books/v1/volumes/${objetodousuario[0].livros[indexDoLivro].idLivro}?key=AIzaSyC-jQZM4QE_T68FCX5_CT-TIILDRj0iFTc`
     let arrayDeResposta = await axios.get(pegando_livro_pelo_id);
     let nomeDoLivro = arrayDeResposta.data.volumeInfo.title
     let numerodepaginaslida = 0;
@@ -728,7 +728,7 @@ router.get('/DashBord/:id/AdicionarRotina/:idDoLivro', async (req, res, next) =>
     // //array dos nomes dos livros
     // let arraydosnomesdoslivros = []
     // for (let index = 0; index < livros.length; index++) {
-    let pegando_livro_pelo_id = `https://www.googleapis.com/books/v1/volumes/${iddolivro}?key=AIzaSyB0tE_alkPXEnuRdhd3PtaUwiFFEISIsSI`
+    let pegando_livro_pelo_id = `https://www.googleapis.com/books/v1/volumes/${iddolivro}?key=AIzaSyC-jQZM4QE_T68FCX5_CT-TIILDRj0iFTc`
     let arrayDeResposta = await axios.get(pegando_livro_pelo_id);
     console.log('')
     nomedoLivro = arrayDeResposta.data.volumeInfo.title
@@ -748,7 +748,7 @@ router.post('/DashBord/:id/AdicionarRotina/:idDoLivro', async (req, res, next) =
     objetodousuario = await UserModel.find({_id: valordoid})
     let log = objetodousuario[0].log
 
-    let apigoogleBook = `https://www.googleapis.com/books/v1/volumes?q=${iddoLivro}&key=AIzaSyB0tE_alkPXEnuRdhd3PtaUwiFFEISIsSI`
+    let apigoogleBook = `https://www.googleapis.com/books/v1/volumes?q=${iddoLivro}&key=AIzaSyC-jQZM4QE_T68FCX5_CT-TIILDRj0iFTc`
     let arrayDeResposta = await axios.get(apigoogleBook);
     console.log(arrayDeResposta.data.items[0].volumeInfo.title)
     let nome = arrayDeResposta.data.items[0].volumeInfo.title
