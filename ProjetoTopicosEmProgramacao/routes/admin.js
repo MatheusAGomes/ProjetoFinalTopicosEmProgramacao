@@ -259,11 +259,15 @@ router.get('/DashBord/:id', async(req, res, next) => {
         
         if(situacaoModificada != 'valor2')
         {
+          
         if (numerodepags != 0) {
           let numeropaginas = arrayDeResposta.data.volumeInfo.pageCount
           //let description =  arrayDeResposta.data.volumeInfo.description
         //  = parseInt(arryLivros[index].numeroDePaginasLivro,10)
         porcentagem =  ((numerodepags * 100)/numeropaginas).toFixed(1)
+        if (porcentagem>100) {
+          porcentagem = 100
+        }
         }
         else{
           porcentagem = 0
@@ -602,6 +606,9 @@ router.get('/DashBord/:id/MinhaLeitura/', async(req, res, next) => {
     //let description =  arrayDeResposta.data.volumeInfo.description
   //  = parseInt(arryLivros[index].numeroDePaginasLivro,10)
    porcentagem =  ((numerolido * 100)/numeropaginas).toFixed(1)
+   if (porcentagem>100) {
+    porcentagem = 100
+  }
    }
    else{
     porcentagem = 0
